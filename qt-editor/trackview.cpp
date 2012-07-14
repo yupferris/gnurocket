@@ -1,105 +1,94 @@
-#include "trackview.h"
-
-#include <QtGui/QApplication>
+#include "TrackView.h"
+#include "TrackModel.h"
 #include <QtGui/QPainter>
-#include <QtGui/QMenuBar>
-#include <QtGui/QStatusBar>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QScrollBar>
 #include <QtGui/QHeaderView>
+#include <iostream>
 
-
-TrackModel::TrackModel(QObject *parent)
- : QAbstractTableModel(parent)
+TrackView::TrackView(QWidget *parent) 
+    : QTableView(parent)
 {
+    trackModel = new TrackModel(this);
+
+    setModel(trackModel);
+
+    QFontMetrics fm(font());
+
+    /* The padding of 4 in "lineSpacing() + 4" has been found by
+     * trial-and-error. Do not lower it, but increasing it is fine. */
+    verticalHeader()->setDefaultSectionSize(fm.lineSpacing() + 4);
+    horizontalHeader()->setDefaultSectionSize(fm.averageCharWidth() * 16);
+    verticalHeader()->setResizeMode(QHeaderView::Fixed);
+
+    // setup scrolling to fixate on the current position
+    setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
+    this->scrollToTop();
+
+    connect(trackModel, SIGNAL(cellChanged(std::string,SyncKey)), this, SIGNAL(cellChanged(std::string,SyncKey)));
 }
 
-int TrackModel::rowCount(const QModelIndex & /* parent */) const
-{
-	return 128;
+int TrackView::GetCurrentRow() {
+    QItemSelectionModel *selection = selectionModel();
+    QModelIndex index = selection->currentIndex();
+    return index.row();
 }
 
-int TrackModel::columnCount(const QModelIndex & /* parent */) const
+void TrackView::keyPressEvent(QKeyEvent *event)
 {
-	return 32;
+    if (event->key() == Qt::Key_I) {
+        // Change interpolation mode
+        QItemSelectionModel *selection = selectionModel();
+        QModelIndex index = selection->currentIndex();
+        trackModel->ChangeInterpolationType(index);
+        SyncKey key = trackModel->GetKey(index);
+        emit interpolationTypeChanged(trackModel->GetTrackName(index.column()), key);
+        this->update(index);
+        this->viewport()->update();
+        repaint();
+
+    } else if (event->key() == Qt::Key_Space) {
+        emit pauseTriggered();
+    } else if (event->key() == Qt::Key_Delete) {
+        QItemSelectionModel *selection = selectionModel();
+        QModelIndex index = selection->currentIndex();
+        trackModel->DeleteKey(index);
+        SyncKey key = trackModel->GetKey(index);
+        emit deleteKey(trackModel->GetTrackName(index.column()), key);
+    } else {
+        QTableView::keyPressEvent(event);
+    }
 }
 
-Qt::ItemFlags TrackModel::flags(const QModelIndex &index) const
+void TrackView::createTrack(std::string name)
 {
-	if (!index.isValid())
-		return 0;
-
-	return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    trackModel->createTrack(name);
+    repaint();
 }
 
-QVariant TrackModel::data(const QModelIndex &index, int role) const
+SyncTrack* TrackView::getTrack(std::string name)
 {
-	if (!index.isValid())
-		return QVariant();
-
-	QString str;
-	switch (role) {
-	case Qt::DisplayRole:
-		if (datacontent.contains(index)) {
-			return datacontent[index];
-		}
-		if (index.row() % 4 != 0)
-			return QVariant();
-		return str.setNum(float(index.row()) / 16);
-
-	case Qt::BackgroundRole:
-		if (index.row() % 4 == 0 && index.column() % 2 == 0)
-			return QBrush(QColor(255, 0, 0, 32));
-		if (index.row() % 8 == 0)
-			return QBrush(QColor(0, 0, 0, 16));
-		return QVariant();
-
-	case Qt::EditRole:
-		if (index.row() % 4 != 0)
-			return QVariant();
-		return str.setNum(float(index.row()) / 16);
-	}
-
-	return QVariant();
+    return trackModel->getTrack(name);
 }
 
-bool TrackModel::setData(const QModelIndex &index, const QVariant &value, int role)
+int TrackView::getTrackIndex(std::string name)
 {
-	bool ok;
-	value.toFloat(&ok);
-
-	if (!ok)
-		return false;
-
-	datacontent[index] = value.toFloat();
-
-	dataChanged(index, index);
-	return true;
+    return trackModel->getTrackIndex(name);
 }
 
-
-QVariant TrackModel::headerData(int section,
-	Qt::Orientation orientation,
-	int role) const
+void TrackView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
-/*	if (role == Qt::SizeHintRole)
-		return QSize(1, 1); */
-	if (role == Qt::DisplayRole) {
-		if (orientation == Qt::Horizontal)
-			return QVariant(QString("header %1").arg(section));
-		else
-			return QVariant(QString("%1").arg(section, 4, 16, QLatin1Char('0')));
-	}
-	return QVariant();
+    QTableView::currentChanged(current, previous);
+    emit rowChanged(current.row());
 }
 
-TrackView::TrackView(QWidget *parent) :
-	QTableView(parent)
+void TrackView::ChangeRow(int row)
 {
-	this->setModel(new TrackModel());
-
-	this->verticalHeader()->setDefaultSectionSize(18);
-	this->horizontalHeader()->setDefaultSectionSize(this->horizontalHeader()->defaultSectionSize() - 30);
-
-	this->verticalHeader()->setResizeMode(QHeaderView::Fixed);
+    setSelectionBehavior(QAbstractItemView::SelectItems);
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    QItemSelectionModel *selection = selectionModel();
+    QModelIndex select = selection->currentIndex();
+    QModelIndex index = trackModel->index(row, select.column());
+    selection->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
 }

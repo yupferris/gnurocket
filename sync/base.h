@@ -13,6 +13,7 @@
 #elif defined(__GNUC__)
  #define inline __inline
  #include <stdint.h>
+ #include <stdlib.h>
 #endif
 
 #ifdef _WIN32

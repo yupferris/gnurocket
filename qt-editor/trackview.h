@@ -3,33 +3,46 @@
 
 #include <QtGui/QTableView>
 #include <QMap>
+#include "SyncTrack.h"
 
-class TrackModel : public QAbstractTableModel
-{
-	Q_OBJECT
+class SyncTrack;
 
-public:
-	TrackModel(QObject *parent = 0);
-
-	int rowCount(const QModelIndex &parent = QModelIndex()) const;
-	int columnCount(const QModelIndex &parent = QModelIndex()) const;
-
-	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-	Qt::ItemFlags flags(const QModelIndex &index) const;
-
-	bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-private:
-    QMap<QModelIndex, float> datacontent;
-};
+class TrackModel;
 
 class TrackView : public QTableView {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	TrackView(QWidget *parent = 0);
+    TrackView(QWidget *parent = 0);
+
+    void scrollTo(const QModelIndex &index, ScrollHint hint)
+    {
+        (void)hint;
+        QTableView::scrollTo(index, QAbstractItemView::PositionAtCenter);
+    }
+
+    void keyPressEvent(QKeyEvent *event);
+
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous);
+
+    SyncTrack* getTrack(std::string name);
+    int getTrackIndex(std::string name);
+    void createTrack(std::string name);
+
+    int GetCurrentRow();
+signals:
+    void rowChanged(int row);
+    void cellChanged(std::string column, SyncKey key);
+    void interpolationTypeChanged(std::string, SyncKey key);
+    void deleteKey(std::string, SyncKey key);
+    void pauseTriggered();
+
+public slots:
+    void ChangeRow(int row);
 
 protected:
+
+    TrackModel *trackModel;
 };
 
 #endif // TRACKVIEW_H
