@@ -14,7 +14,7 @@ public:
 
 	void disconnect()
 	{
-		closesocket(socket);
+		//closesocket(socket);
 		socket = INVALID_SOCKET;
 		clientTracks.clear();
 	}
