@@ -1,0 +1,5 @@
+*.o
+Makefile
+ui_*.h
+moc_*.cpp
+QtRocket
