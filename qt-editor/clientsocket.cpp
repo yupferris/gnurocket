@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <string>
+#include <iostream>
 
 void ClientSocket::sendSetKeyCommand(const std::string &trackName, const struct track_key &key)
 {
@@ -67,6 +68,7 @@ void ClientSocket::sendPauseCommand(bool pause)
 
 void ClientSocket::sendSaveCommand()
 {
+    std::cout << "export" << std::endl;
 	if (!connected())
 		return;
 

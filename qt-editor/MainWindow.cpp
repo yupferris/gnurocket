@@ -49,6 +49,12 @@ void MainWindow::OpenFile()
     QString path = QFileDialog::getOpenFileName(this, tr("Directory"));
     if (path.isNull() == false)
     {
+        std::cout << "Not implemented" << std::endl;
     }
+}
+
+void MainWindow::RunExport()
+{
+    serverWrapper->sendExportCommand();
 }
 

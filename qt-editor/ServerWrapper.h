@@ -37,6 +37,7 @@ public slots:
     void interpolationTypeChanged(std::string track, SyncKey key2);
     void SendPause();
     void keyDeleted(std::string, SyncKey key);
+    void sendExportCommand();
 
     //bool recv(char *buffer, size_t length, int flags);
 

@@ -242,3 +242,8 @@ void ServerWrapper::keyDeleted(std::string track, SyncKey key)
 {
     clientSocket.sendDeleteKeyCommand(track, key.row);
 }
+
+void ServerWrapper::sendExportCommand()
+{
+    clientSocket.sendSaveCommand();
+}

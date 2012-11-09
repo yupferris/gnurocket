@@ -23,6 +23,7 @@ public:
     void SetStatusMessage(QString msg);
 public slots:
     void OpenFile();
+    void RunExport();
 
 public:
     Ui::MainWindow *ui;

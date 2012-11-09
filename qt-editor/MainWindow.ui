@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -34,6 +34,7 @@
      <string>&amp;File</string>
     </property>
     <addaction name="actionOpen_file"/>
+    <addaction name="actionExport"/>
     <addaction name="action_Quit"/>
    </widget>
    <addaction name="menu_File"/>
@@ -59,6 +60,17 @@
     <string>Ctrl+O</string>
    </property>
   </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Export</string>
+   </property>
+   <property name="toolTip">
+    <string>Export on client side</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
@@ -81,7 +93,7 @@
   </connection>
   <connection>
    <sender>actionOpen_file</sender>
-   <signal>activated()</signal>
+   <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>OpenFile()</slot>
    <hints>
@@ -95,5 +107,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionExport</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>RunExport()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>156</x>
+     <y>18</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>249</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>RunExport()</slot>
+  <slot>OpenFile()</slot>
+ </slots>
 </ui>
