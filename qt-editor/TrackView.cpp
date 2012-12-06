@@ -53,8 +53,8 @@ void TrackView::keyPressEvent(QKeyEvent *event)
     } else if (event->key() == Qt::Key_Delete) {
         QItemSelectionModel *selection = selectionModel();
         QModelIndex index = selection->currentIndex();
-        trackModel->DeleteKey(index);
         SyncKey key = trackModel->GetKey(index);
+        trackModel->DeleteKey(index);
         emit deleteKey(trackModel->GetTrackName(index.column()), key);
     } else {
         QTableView::keyPressEvent(event);
