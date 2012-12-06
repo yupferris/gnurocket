@@ -5,7 +5,7 @@
 #include "device.h"
 #include "sync.h"
 #include <stdio.h>
-#include <unistd.h>
+//#include <unistd.h>
 #include <assert.h>
 #include <math.h>
 

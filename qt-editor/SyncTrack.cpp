@@ -54,7 +54,7 @@ SyncKey SyncTrack::GetKey(int row)
         SyncKey key;
         return key;
     }
-    int irow = (int)floor(row);
+    int irow = row; // (int)floor(row);
 
     if (keys.lower_bound(irow) == keys.begin()) {
         return keys.lower_bound(irow)->second;
@@ -117,7 +117,7 @@ void SyncTrack::SetKey(SyncKey key)
     keys[key.row] = key;
 }
 
-int SyncTrack::DelKey(int row)
+void SyncTrack::DelKey(int row)
 {
     SyncTrack::iterator it = keys.find(row);
     std::cout << it->second.row << " " << it->second.value << std::endl;

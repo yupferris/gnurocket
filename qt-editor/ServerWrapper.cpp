@@ -4,67 +4,39 @@
 #include "MainWindow.h"
 #include <cassert>
 #include <fcntl.h>
+#ifndef WIN32
 #include <unistd.h>
+#else
+#define socklen_t int
+#endif
 #include "../sync/base.h"
 #include <stdexcept>
 #include "../sync/track.h"
 
 const int SYNC_PORT = 1338;
 
-SOCKET clientConnect(SOCKET serverSocket, sockaddr_in *host)
+bool clientConnect(QAbstractSocket *clientSocket)
 {
-    sockaddr_in hostTemp;
-    socklen_t hostSize = sizeof(sockaddr_in);
-    SOCKET clientSocket = accept(serverSocket, (sockaddr*)&hostTemp, &hostSize);
-    if (INVALID_SOCKET == clientSocket) return INVALID_SOCKET;
-
     const char *expectedGreeting = CLIENT_GREET;
     char recievedGreeting[128];
 
-    recv(clientSocket, recievedGreeting, int(strlen(expectedGreeting)), 0);
-
+    clientSocket->read(recievedGreeting, strlen(expectedGreeting));
     if (strncmp(expectedGreeting, recievedGreeting, strlen(expectedGreeting)) != 0)
-    {
-        closesocket(clientSocket);
-        return INVALID_SOCKET;
-    }
+        return false;
     std::cout << "Greeting was ok" << std::endl;
 
     const char *greeting = SERVER_GREET;
-    send(clientSocket, greeting, int(strlen(greeting)), 0);
-
-    if (NULL != host) *host = hostTemp;
-    return clientSocket;
+    clientSocket->write(greeting, strlen(greeting));
+    return true;
 }
 
 ServerWrapper::ServerWrapper(MainWindow *parent) :
     QObject((QObject*)parent), mainWindow(parent)
 {
     isClientPaused = true;
-#ifdef WIN32
-    WSADATA wsa;
-    if (0 != WSAStartup(MAKEWORD(2, 0), &wsa))
-        assert(0);
-#endif
-
-    serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (serverSocket == INVALID_SOCKET) {
-        assert(0);
-    }
-
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof addr);
-
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_port = htons(SYNC_PORT);
-
-    if (bind(serverSocket, (struct sockaddr *)&addr, sizeof(addr)))
-        throw std::runtime_error("Coult not bind server on port");
-
-    if (listen(serverSocket, SOMAXCONN)) {
-        throw std::runtime_error("Coult not listen on socket");
-    }
+    server = new QTcpServer(this);
+    if (!server->listen(QHostAddress::Any, SYNC_PORT))
+        throw std::runtime_error("Coult not listen on port");
 }
 
 ServerWrapper::~ServerWrapper() {
@@ -79,32 +51,20 @@ void ServerWrapper::update()
     }
 }
 
-void ServerWrapper::acceptConnection() {
-
-    SOCKET newSocket = INVALID_SOCKET;
-    fd_set fds;
-    FD_ZERO(&fds);
-    FD_SET(serverSocket, &fds);
-    struct timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 1000;
-
-    // look for new clients
-    if (select(serverSocket+1, &fds, NULL, NULL, &timeout) > 0)
-    {
-        sockaddr_in client;
-        newSocket = clientConnect(serverSocket, &client);
-
-        if (INVALID_SOCKET != newSocket)
+void ServerWrapper::acceptConnection()
+{
+    if (server->hasPendingConnections()) {
+        QTcpSocket *clientSocket = server->nextPendingConnection();
+        if (clientConnect(clientSocket))
         {
 
             char temp[256];
-            snprintf(temp, 256, "Connected to %s", inet_ntoa(client.sin_addr));
+	    snprintf(temp, 256, "Connected to %s", clientSocket->peerAddress().toString().toAscii() );
             mainWindow->SetStatusMessage(temp);
 
             clientIndex = 0;
 
-            this->clientSocket = ClientSocket(newSocket);
+            this->clientSocket = ClientSocket(clientSocket);
             this->clientSocket.sendPauseCommand(true);
             this->clientSocket.sendSetRowCommand(mainWindow->trackView->GetCurrentRow());
             isClientPaused = true;
@@ -127,19 +87,19 @@ void ServerWrapper::processCommands()
     int strLen, serverIndex, newRow;
     std::string trackName;
     unsigned char cmd = 0;
-    if (clientSocket.recv((char*)&cmd, 1, 0)) {
+    if (clientSocket.recv((char*)&cmd, 1)) {
         std::cout << "Cmd: " << (int)cmd << std::endl;
         switch (cmd) {
         case GET_TRACK:
             {
             // Get index
             uint32_t index;
-            if (!clientSocket.recv((char*)&index, sizeof(index), 0))
+            if (!clientSocket.recv((char*)&index, sizeof(index)))
                 return;
             std::cout << "Index: " << index << std::endl;
 
             // Get track string length
-            clientSocket.recv((char *)&strLen, sizeof(int), 0);
+            clientSocket.recv((char *)&strLen, sizeof(int));
             strLen = ntohl(strLen);
             std::cout << "Strlen: " << strLen << std::endl;
             if (!clientSocket.connected())
@@ -147,7 +107,7 @@ void ServerWrapper::processCommands()
 
             // Get track string
             trackName.resize(strLen);
-            if (!clientSocket.recv(&trackName[0], strLen, 0))
+            if (!clientSocket.recv(&trackName[0], strLen))
                 return;
             std::cout << "TrackName: " << trackName << std::endl;
 
@@ -174,7 +134,7 @@ void ServerWrapper::processCommands()
             }
             break;
         case SET_ROW:
-            clientSocket.recv((char*)&newRow, sizeof(newRow), 0);
+            clientSocket.recv((char*)&newRow, sizeof(newRow));
             newRow = ntohl(newRow);
 //			trackView->setEditRow(ntohl(newRow));
             emit rowChanged(newRow);

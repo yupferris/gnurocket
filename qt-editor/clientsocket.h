@@ -1,42 +1,42 @@
 #include "../sync/base.h"
 #include <map>
 #include <string>
+#include <QTcpSocket>
 
 class ClientSocket {
 public:
-	ClientSocket() : socket(INVALID_SOCKET) {}
-    explicit ClientSocket(SOCKET socket) : clientPaused(true), socket(socket) {}
+	ClientSocket() : socket(NULL) {}
+	explicit ClientSocket(QAbstractSocket *socket) : clientPaused(true), socket(socket) {}
 
 	bool connected() const
 	{
-		return INVALID_SOCKET != socket;
+		return socket != NULL;
 	}
 
 	void disconnect()
 	{
-		//closesocket(socket);
-		socket = INVALID_SOCKET;
+		socket = NULL;
 		clientTracks.clear();
 	}
 
-	bool recv(char *buffer, size_t length, int flags)
+	bool recv(char *buffer, size_t length)
 	{
 		if (!connected())
 			return false;
-		int ret = ::recv(socket, buffer, int(length), flags);
-		if (ret != int(length)) {
+		qint64 ret = socket->read(buffer, length);
+		if (ret != length) {
 			disconnect();
 			return false;
 		}
 		return true;
 	}
 
-	bool send(const char *buffer, size_t length, int flags)
+	bool send(const char *buffer, size_t length)
 	{
 		if (!connected())
 			return false;
-		int ret = ::send(socket, buffer, int(length), flags);
-		if (ret != int(length)) {
+		qint64 ret = socket->write(buffer, length);
+		if (ret != length) {
 			disconnect();
 			return false;
 		}
@@ -47,7 +47,7 @@ public:
 	{
 		if (!connected())
 			return false;
-		return !!socket_poll(socket);
+		return socket->bytesAvailable() > 0;
 	}
 
 	void sendSetKeyCommand(const std::string &trackName, const struct track_key &key);
@@ -60,5 +60,5 @@ public:
 	std::map<const std::string, size_t> clientTracks;
 
 private:
-	SOCKET socket;
+	QAbstractSocket *socket;
 };

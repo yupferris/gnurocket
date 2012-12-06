@@ -2,9 +2,12 @@
 
 #include <string>
 #include <map>
-#include <stdint.h>
 #ifndef _WIN32
+#include <stdint.h>
 #include <arpa/inet.h>
+#else
+typedef unsigned char uint8_t;
+typedef unsigned int uint32_t;
 #endif
 
 // include shared_ptr
@@ -49,7 +52,7 @@ public:
 
     SyncKey GetKey(int row);
     void SetKey(SyncKey key);
-    int DelKey(int row);
+    void DelKey(int row);
     bool IsKeyFrame(int row);
 
     void LoadFromFile(std::string path);
@@ -71,4 +74,4 @@ private:
     std::map<int, SyncKey> keys;
 };
 
-typedef shared_ptr<SyncTrack> SyncTrackPtr;
+//typedef shared_ptr<SyncTrack> SyncTrackPtr;

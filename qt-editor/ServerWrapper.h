@@ -44,12 +44,11 @@ public slots:
 
 private:
     MainWindow *mainWindow;
-//    QTcpServer *server;
+    QTcpServer *server;
 //    QTcpSocket *client;
     int isClientPaused;
     ClientState client_state;
     //int socket;
-    int serverSocket;
     int clientIndex;
     ClientSocket clientSocket;
 };
