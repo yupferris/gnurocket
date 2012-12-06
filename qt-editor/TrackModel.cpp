@@ -42,8 +42,9 @@ QVariant TrackModel::data(const QModelIndex &index, int role) const
         return str.setNum(tracks[index.column()]->GetValue(index.row()));
 
     case Qt::BackgroundRole:
-        if (tracks[index.column()]->GetKey(index.row()).type == SyncKey::LINEAR) {
-            return QBrush(QColor(0, 255, 0, 16));
+        if (tracks[index.column()]->GetKeyMap().size()) {
+            if (tracks[index.column()]->GetPrevKey(index.row()).type == SyncKey::LINEAR)
+                return QBrush(QColor(0, 255, 0, 16));
         }
 
         if (index.row() % 8 == 0)
@@ -108,11 +109,26 @@ QVariant TrackModel::headerData(int section,
     return QVariant();
 }
 
-SyncKey TrackModel::GetKey(const QModelIndex &index) {
+SyncKey TrackModel::GetPrevKey(const QModelIndex &index) {
     SyncKey key = {};
     if (index.column() >= tracks.size()) return key;
 
-    return tracks[index.column()]->GetKey(index.row());
+    return tracks[index.column()]->GetPrevKey(index.row());
+}
+
+SyncKey TrackModel::GetExactKey(const QModelIndex &index) {
+    SyncKey key = {};
+    if (index.column() >= tracks.size()) return key;
+
+    return tracks[index.column()]->GetExactKey(index.row());
+}
+
+bool TrackModel::IsKeyFrame(const QModelIndex &index)
+{
+    if (index.column() >= tracks.size())
+        return false;
+
+    return tracks[index.column()]->IsKeyFrame(index.row());
 }
 
 void TrackModel::DeleteKey(const QModelIndex &index)
@@ -123,9 +139,10 @@ void TrackModel::DeleteKey(const QModelIndex &index)
 
 void TrackModel::ChangeInterpolationType(const QModelIndex &index)
 {
-    if (index.column() >= tracks.size()) return;
+    if (index.column() >= tracks.size() || !tracks[index.column()]->GetKeyMap().size())
+        return;
 
-    SyncKey key = tracks[index.column()]->GetKey(index.row());
+    SyncKey key = tracks[index.column()]->GetPrevKey(index.row());
     key.row = index.row();
     key.type = static_cast<SyncKey::Type>((key.type+1)%4);
 

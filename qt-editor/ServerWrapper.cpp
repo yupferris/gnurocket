@@ -55,11 +55,9 @@ void ServerWrapper::acceptConnection()
 {
     if (server->hasPendingConnections()) {
         QTcpSocket *clientSocket = server->nextPendingConnection();
-        if (clientConnect(clientSocket))
-        {
-
+        if (clientConnect(clientSocket)) {
             char temp[256];
-	    snprintf(temp, 256, "Connected to %s", clientSocket->peerAddress().toString().toAscii() );
+            snprintf(temp, 256, "Connected to %s", clientSocket->peerAddress().toString().toAscii());
             mainWindow->SetStatusMessage(temp);
 
             clientIndex = 0;

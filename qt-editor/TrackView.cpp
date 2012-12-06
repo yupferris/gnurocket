@@ -42,8 +42,8 @@ void TrackView::keyPressEvent(QKeyEvent *event)
         QItemSelectionModel *selection = selectionModel();
         QModelIndex index = selection->currentIndex();
         trackModel->ChangeInterpolationType(index);
-        SyncKey key = trackModel->GetKey(index);
-        emit interpolationTypeChanged(trackModel->GetTrackName(index.column()), key);
+//        SyncKey key = trackModel->GetPrevKey(index);
+//        emit interpolationTypeChanged(trackModel->GetTrackName(index.column()), key);
         this->update(index);
         this->viewport()->update();
         repaint();
@@ -53,9 +53,11 @@ void TrackView::keyPressEvent(QKeyEvent *event)
     } else if (event->key() == Qt::Key_Delete) {
         QItemSelectionModel *selection = selectionModel();
         QModelIndex index = selection->currentIndex();
-        SyncKey key = trackModel->GetKey(index);
-        trackModel->DeleteKey(index);
-        emit deleteKey(trackModel->GetTrackName(index.column()), key);
+        if (trackModel->IsKeyFrame(index)) {
+            SyncKey key = trackModel->GetExactKey(index);
+            trackModel->DeleteKey(index);
+            emit deleteKey(trackModel->GetTrackName(index.column()), key);
+        }
     } else {
         QTableView::keyPressEvent(event);
     }

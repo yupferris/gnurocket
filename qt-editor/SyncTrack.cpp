@@ -48,19 +48,15 @@ SyncTrack::SyncTrack(std::string name)
 {
 }
 
-SyncKey SyncTrack::GetKey(int row)
+SyncKey SyncTrack::GetPrevKey(int row)
 {
-    if (keys.size() == 0) {
-        SyncKey key;
-        return key;
-    }
-    int irow = row; // (int)floor(row);
+    assert(keys.size() != 0);
 
-    if (keys.lower_bound(irow) == keys.begin()) {
-        return keys.lower_bound(irow)->second;
+    if (keys.lower_bound(row) == keys.begin()) {
+        return keys.lower_bound(row)->second;
     }
 
-    std::map<int,SyncKey>::iterator it = keys.upper_bound(irow);
+    std::map<int,SyncKey>::iterator it = keys.upper_bound(row);
     it--;
     if (it == keys.end())
         return it->second;
@@ -70,6 +66,12 @@ SyncKey SyncTrack::GetKey(int row)
     return it->second;
 }
 
+SyncKey SyncTrack::GetExactKey(int row)
+{
+    assert(keys.size() != 0);
+    assert(keys.count(row) == 1);
+    return keys[row];
+}
 
 
 float SyncTrack::GetValue(double row) {
@@ -120,9 +122,10 @@ void SyncTrack::SetKey(SyncKey key)
 void SyncTrack::DelKey(int row)
 {
     SyncTrack::iterator it = keys.find(row);
-    std::cout << it->second.row << " " << it->second.value << std::endl;
-    if (it != keys.end())
+    if (it != keys.end()) {
+        std::cout << it->second.row << " " << it->second.value << std::endl;
         keys.erase(it);
+    }
 }
 
 void SyncTrack::LoadFromFile(std::string base) {

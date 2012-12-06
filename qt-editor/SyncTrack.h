@@ -50,7 +50,8 @@ public:
 
     float GetValue(double row);
 
-    SyncKey GetKey(int row);
+    SyncKey GetPrevKey(int row);
+    SyncKey GetExactKey(int row);
     void SetKey(SyncKey key);
     void DelKey(int row);
     bool IsKeyFrame(int row);

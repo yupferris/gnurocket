@@ -30,7 +30,9 @@ public:
 
     bool HasTrack(std::string name);
     std::string GetTrackName(int column);
-    SyncKey GetKey(const QModelIndex &index);
+    SyncKey GetPrevKey(const QModelIndex &index);
+    SyncKey GetExactKey(const QModelIndex &index);
+    bool IsKeyFrame(const QModelIndex &index);
     void DeleteKey(const QModelIndex &index);
 
 signals:
