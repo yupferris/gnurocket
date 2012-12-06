@@ -22,6 +22,7 @@ public:
     }
 
     void keyPressEvent(QKeyEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
     void currentChanged(const QModelIndex &current, const QModelIndex &previous);
 

@@ -63,6 +63,12 @@ void TrackView::keyPressEvent(QKeyEvent *event)
     }
 }
 
+void TrackView::resizeEvent(QResizeEvent *event)
+{
+    scrollTo(selectionModel()->currentIndex(), QAbstractItemView::PositionAtCenter);
+    QTableView::resizeEvent(event);
+}
+
 void TrackView::createTrack(std::string name)
 {
     trackModel->createTrack(name);
