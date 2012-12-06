@@ -56,13 +56,13 @@ void ServerWrapper::acceptConnection()
     if (server->hasPendingConnections()) {
         QTcpSocket *clientSocket = server->nextPendingConnection();
         if (clientConnect(clientSocket)) {
-            mainWindow->SetStatusMessage(QString("Connected to ") + clientSocket->peerAddress().toString());
             clientIndex = 0;
-
             this->clientSocket = ClientSocket(clientSocket);
+
             this->clientSocket.sendPauseCommand(true);
-            this->clientSocket.sendSetRowCommand(mainWindow->trackView->GetCurrentRow());
             isClientPaused = true;
+
+            emit clientConnected(clientSocket->peerAddress());
         }
     }
 }

@@ -24,6 +24,7 @@ public:
 public slots:
     void OpenFile();
     void RunExport();
+    void onClientConnected(const QHostAddress &hostAddress);
 
 public:
     Ui::MainWindow *ui;

@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(trackView, SIGNAL(rowChanged(int)), serverWrapper, SLOT(ChangeRow(int)));
     connect(serverWrapper, SIGNAL(rowChanged(int)), trackView, SLOT(ChangeRow(int)));
+    connect(serverWrapper, SIGNAL(clientConnected(const QHostAddress &)), this, SLOT(onClientConnected(const QHostAddress &)));
     connect(trackView, SIGNAL(cellChanged(std::string,SyncKey)), serverWrapper, SLOT(cellChanged(std::string,SyncKey)));
     connect(trackView, SIGNAL(interpolationTypeChanged(std::string,SyncKey)), serverWrapper, SLOT(interpolationTypeChanged(std::string,SyncKey)));
     connect(trackView, SIGNAL(pauseTriggered()), serverWrapper, SLOT(SendPause()));
@@ -42,6 +43,12 @@ MainWindow::~MainWindow()
 {
     delete serverWrapper;
     delete ui;
+}
+
+void MainWindow::onClientConnected(const QHostAddress &hostAddress)
+{
+    SetStatusMessage(QString("Connected to ") + hostAddress.toString());
+    serverWrapper->ChangeRow(trackView->GetCurrentRow());
 }
 
 void MainWindow::OpenFile()

@@ -24,6 +24,7 @@ public:
 
 signals:
     void rowChanged(int row);
+    void clientConnected(const QHostAddress &hostAddress);
 
 public slots:
     void update();
