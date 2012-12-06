@@ -35,15 +35,19 @@ QVariant TrackModel::data(const QModelIndex &index, int role) const
     if (index.column() >= tracks.size())
         return QVariant();
 
+    SyncTrack *track = tracks[index.column()];
+
     QString str;
     QVariant var(QVariant::Double);
     switch (role) {
     case Qt::DisplayRole:
-        return str.setNum(tracks[index.column()]->GetValue(index.row()));
+        if (track->IsKeyFrame(index.row()))
+            return str.setNum(track->GetValue(index.row()));
+        return QVariant("---");
 
     case Qt::BackgroundRole:
-        if (tracks[index.column()]->GetKeyMap().size()) {
-            if (tracks[index.column()]->GetPrevKey(index.row()).type == SyncKey::LINEAR)
+        if (track->GetKeyMap().size() && index.row() >= track->GetKeyMap().begin()->first) {
+            if (track->GetPrevKey(index.row()).type == SyncKey::LINEAR)
                 return QBrush(QColor(0, 255, 0, 16));
         }
 
@@ -52,14 +56,14 @@ QVariant TrackModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     case Qt::EditRole:
-        if (tracks[index.column()]->IsKeyFrame(index.row())) {
-            var.setValue(tracks[index.column()]->GetValue(index.row()));
+        if (track->IsKeyFrame(index.row())) {
+            var.setValue(track->GetValue(index.row()));
             return var.toDouble();
         }
         return QVariant(QVariant::Double);
 
     case Qt::TextColorRole:
-        if (tracks[index.column()]->IsKeyFrame(index.row())) {
+        if (track->IsKeyFrame(index.row())) {
             return QBrush(QColor(0, 0, 0, 255));
         }
         return QBrush(QColor(64, 64, 64, 32));
@@ -143,7 +147,6 @@ void TrackModel::ChangeInterpolationType(const QModelIndex &index)
         return;
 
     SyncKey key = tracks[index.column()]->GetPrevKey(index.row());
-    key.row = index.row();
     key.type = static_cast<SyncKey::Type>((key.type+1)%4);
 
     tracks[index.column()]->SetKey(key);
