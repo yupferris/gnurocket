@@ -16,7 +16,8 @@ public:
 
 protected:
 	void scrollContentsBy(int dx, int dy);
-	void updateScrollbars();
+	void updateHScrollbar();
+	void updateVScrollbar();
 	void keyPressEvent(QKeyEvent *event);
 	void resizeEvent(QResizeEvent *event);
 	MultiTrackView *multiTrackView;

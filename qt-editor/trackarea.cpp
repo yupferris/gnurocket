@@ -31,18 +31,21 @@ void TrackArea::setRow(int row)
 {
 	multiTrackView->setRow(row);
 	rowNumberView->setRowHilight(row);
-	updateScrollbars();
+	updateVScrollbar();
 }
 
-void TrackArea::updateScrollbars()
+void TrackArea::updateHScrollbar()
 {
 	// make sure current track is visible
 	const TrackView *trackView = multiTrackView->getCurrentTrackView();
 	int x = trackView->x() + trackView->width() / 2;
 	ensureVisible(x, verticalScrollBar()->value() + viewport()->height() / 2, trackView->width() / 2, 0);
+}
 
+void TrackArea::updateVScrollbar()
+{
 	// vertically center current row
-	QFontMetrics fm(trackView->font());
+	QFontMetrics fm(font());
 	int y = multiTrackView->getRow() * fm.lineSpacing() + fm.lineSpacing() / 2;
 	verticalScrollBar()->setValue(y - viewport()->height() / 2);
 }
@@ -68,19 +71,20 @@ void TrackArea::keyPressEvent(QKeyEvent *event)
 
 	case Qt::Key_Left:
 		multiTrackView->setCol(multiTrackView->getCol() - 1);
-		updateScrollbars();
+		updateHScrollbar();
 		break;
 
 	case Qt::Key_Right:
 		multiTrackView->setCol(multiTrackView->getCol() + 1);
-		updateScrollbars();
+		updateHScrollbar();
 		break;
 	}
 }
 
 void TrackArea::resizeEvent(QResizeEvent *event)
 {
-	updateScrollbars();
+	updateHScrollbar();
+	updateVScrollbar();
 	QScrollArea::resizeEvent(event);
 	rowNumberView->move(0, widget()->y());
 	rowNumberView->resize(rowNumberView->width(), widget()->height());
