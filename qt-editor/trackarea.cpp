@@ -27,6 +27,13 @@ TrackArea::TrackArea(QWidget *parent) :
 	setBackgroundRole(QPalette::Dark);
 }
 
+void TrackArea::setRow(int row)
+{
+	multiTrackView->setRow(row);
+	rowNumberView->setRowHilight(row);
+	updateScrollbars();
+}
+
 void TrackArea::updateScrollbars()
 {
 	// make sure current track is visible
@@ -44,27 +51,19 @@ void TrackArea::keyPressEvent(QKeyEvent *event)
 {
 	switch (event->key()) {
 	case Qt::Key_Up:
-		multiTrackView->setRow(multiTrackView->getRow() - 1);
-		rowNumberView->setRowHilight(multiTrackView->getRow());
-		updateScrollbars();
+		setRow(multiTrackView->getRow() - 1);
 		break;
 
 	case Qt::Key_Down:
-		multiTrackView->setRow(multiTrackView->getRow() + 1);
-		rowNumberView->setRowHilight(multiTrackView->getRow());
-		updateScrollbars();
+		setRow(multiTrackView->getRow() + 1);
 		break;
 
 	case Qt::Key_PageUp:
-		multiTrackView->setRow(multiTrackView->getRow() - 16);
-		rowNumberView->setRowHilight(multiTrackView->getRow());
-		updateScrollbars();
+		setRow(multiTrackView->getRow() - 16);
 		break;
 
 	case Qt::Key_PageDown:
-		multiTrackView->setRow(multiTrackView->getRow() + 16);
-		rowNumberView->setRowHilight(multiTrackView->getRow());
-		updateScrollbars();
+		setRow(multiTrackView->getRow() + 16);
 		break;
 
 	case Qt::Key_Left:

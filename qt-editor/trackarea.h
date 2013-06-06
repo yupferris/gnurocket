@@ -12,6 +12,8 @@ class TrackArea : public QScrollArea {
 public:
 	TrackArea(QWidget *parent = 0);
 
+	void setRow(int row);
+
 protected:
 	void scrollContentsBy(int dx, int dy);
 	void updateScrollbars();
