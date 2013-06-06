@@ -21,6 +21,12 @@ MultiTrackView::MultiTrackView(QWidget *parent) :
 	setRow(0);
 }
 
+QRect MultiTrackView::getCurrentTrackRect() const
+{
+	Q_ASSERT(currCol >= 0 && trackViews.size());
+	return trackViews[currCol]->geometry();
+}
+
 void MultiTrackView::setRow(int row)
 {
 	if (!trackViews.size())

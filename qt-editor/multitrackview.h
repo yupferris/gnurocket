@@ -17,12 +17,8 @@ public:
 	int getCol() { return currCol; }
 	void setCol(int col);
 
-	const TrackView *getCurrentTrackView() const
-	{
-		if (currCol < 0 || !trackViews.size())
-			return NULL;
-		return trackViews[currCol];
-	}
+	QRect getCurrentTrackRect() const;
+
 protected:
 
 	QHBoxLayout *horizontalLayout;

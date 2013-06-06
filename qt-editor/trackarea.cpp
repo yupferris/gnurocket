@@ -37,9 +37,9 @@ void TrackArea::setRow(int row)
 void TrackArea::updateHScrollbar()
 {
 	// make sure current track is visible
-	const TrackView *trackView = multiTrackView->getCurrentTrackView();
-	int x = trackView->x() + trackView->width() / 2;
-	ensureVisible(x, verticalScrollBar()->value() + viewport()->height() / 2, trackView->width() / 2, 0);
+	const QRect trackRect = multiTrackView->getCurrentTrackRect();
+	int x = trackRect.x() + trackRect.width() / 2;
+	ensureVisible(x, verticalScrollBar()->value() + viewport()->height() / 2, trackRect.width() / 2, 0);
 }
 
 void TrackArea::updateVScrollbar()
