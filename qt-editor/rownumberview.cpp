@@ -12,8 +12,6 @@ void RowNumberView::paintEvent(QPaintEvent *event)
 	rect.setLeft(0);
 	rect.setRight(width() - 1);
 
-	painter.setPen(palette().color(QPalette::WindowText));
-
 	int lineSpacing = painter.fontMetrics().lineSpacing();
 	int startRow = event->rect().top() / lineSpacing;
 	int stopRow = (event->rect().bottom() + lineSpacing - 1) / lineSpacing;
@@ -31,6 +29,13 @@ void RowNumberView::paintEvent(QPaintEvent *event)
 		option.state |= QStyle::State_Raised;
 		option.rect = rect;
 		painter.drawPrimitive(QStyle::PE_FrameButtonBevel, option);
+
+		if (r % 8 == 0)
+			painter.setPen(QColor(0, 0, 0));
+		else if (r % 4 == 0)
+			painter.setPen(QColor(64, 64, 64));
+		else
+			painter.setPen(QColor(128, 128, 128));
 
 		QString temp = QString("%1").arg(r, 5, 16, QLatin1Char('0')).toUpper() + QString("h");
 		painter.drawText(rect, temp);
