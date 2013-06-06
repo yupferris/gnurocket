@@ -17,7 +17,7 @@ void RowNumberView::paintEvent(QPaintEvent *event)
 	int stopRow = (event->rect().bottom() + lineSpacing - 1) / lineSpacing;
 	for (int r = startRow; r < stopRow; ++r) {
 		rect.setTop(r * lineSpacing);
-		rect.setBottom((r + 1) * lineSpacing);
+		rect.setBottom((r + 1) * lineSpacing - 1);
 
 		if (r == rowHilight)
 			painter.fillRect(rect, Qt::yellow);

@@ -21,7 +21,6 @@ public:
 
 protected:
 
-	QHBoxLayout *horizontalLayout;
 	QList<TrackView *> trackViews;
 	int currRow, currCol;
 };

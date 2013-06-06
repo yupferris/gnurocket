@@ -24,8 +24,9 @@ TrackArea::TrackArea(QWidget *parent) :
 	rowNumberView = new RowNumberView(this);
 	setViewportMargins(fontMetrics().width(' ') * 8, 0, 0, 0);
 
-	setFrameShape(QFrame::Panel);
+	setFrameShape(QFrame::NoFrame);
 	setBackgroundRole(QPalette::Dark);
+	setAutoFillBackground(true);
 }
 
 void TrackArea::setRow(int row)
