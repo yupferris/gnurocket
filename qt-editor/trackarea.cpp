@@ -22,6 +22,7 @@ TrackArea::TrackArea(QWidget *parent) :
 	setAlignment(Qt::AlignCenter);
 
 	rowNumberView = new RowNumberView(this);
+	setViewportMargins(fontMetrics().width(' ') * 8, 0, 0, 0);
 
 	setFrameShape(QFrame::Panel);
 	setBackgroundRole(QPalette::Dark);
@@ -39,7 +40,8 @@ void TrackArea::updateHScrollbar()
 	// make sure current track is visible
 	const QRect trackRect = multiTrackView->getCurrentTrackRect();
 	int x = trackRect.x() + trackRect.width() / 2;
-	ensureVisible(x, verticalScrollBar()->value() + viewport()->height() / 2, trackRect.width() / 2, 0);
+	int y = verticalScrollBar()->value() + viewport()->height() / 2;
+	ensureVisible(x, y, trackRect.width() / 2, 0);
 }
 
 void TrackArea::updateVScrollbar()
@@ -87,8 +89,7 @@ void TrackArea::resizeEvent(QResizeEvent *event)
 	updateVScrollbar();
 	QScrollArea::resizeEvent(event);
 	rowNumberView->move(0, widget()->y());
-	rowNumberView->resize(rowNumberView->width(), widget()->height());
-	setViewportMargins(rowNumberView->width(), 0, 0, 0);
+	rowNumberView->resize(viewport()->x(), widget()->height());
 }
 
 void TrackArea::scrollContentsBy(int dx, int dy)
