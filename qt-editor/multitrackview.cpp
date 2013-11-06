@@ -7,23 +7,29 @@
 MultiTrackView::MultiTrackView(QWidget *parent) :
 	QWidget(parent),
 	currRow(-1),
-	currCol(0)
+	currCol(-1)
 {
 	QHBoxLayout *layout = new QHBoxLayout();
 	layout->setContentsMargins(QMargins());
 	layout->setSpacing(1);
+	setLayout(layout);
+
+	// HACK: add some data!
 	for (int i = 0; i < 10; ++i) {
 		TrackView *trackView = new TrackView;
 		trackViews.append(trackView);
 		layout->addWidget(trackView);
 	}
-	setLayout(layout);
+	setCol(0);
 	setRow(0);
 }
 
 QRect MultiTrackView::getCurrentTrackRect() const
 {
-	Q_ASSERT(currCol >= 0 && trackViews.size());
+	if (currCol < 0)
+		return QRect(0, 0, 0, 0);
+
+	Q_ASSERT(trackViews.size());
 	return trackViews[currCol]->geometry();
 }
 
@@ -34,6 +40,7 @@ void MultiTrackView::setRow(int row)
 
 	row = qMax(row, 0);
 	if (currRow != row) {
+		Q_ASSERT(currCol >= 0 && currCol < trackViews.size());
 		trackViews[currCol]->setRowHilight(row);
 		currRow = row;
 	} else
