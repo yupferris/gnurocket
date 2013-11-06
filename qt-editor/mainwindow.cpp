@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
-#include <QtGui/QMenuBar>
-#include <QtGui/QStatusBar>
+#include <QMenuBar>
+#include <QStatusBar>
 
 #include "trackarea.h"
 

@@ -1,8 +1,8 @@
 #ifndef TRACKVIEW_H
 #define TRACKVIEW_H
 
-#include <QtGui/QWidget>
-#include <QtGui/QScrollArea>
+#include <QWidget>
+#include <QScrollArea>
 #include <QFontInfo>
 #include <QEvent>
 #include <QPainter>

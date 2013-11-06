@@ -1,15 +1,15 @@
 #include "trackview.h"
 #include "multitrackview.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QPainter>
-#include <QtGui/QMenuBar>
-#include <QtGui/QStatusBar>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QScrollBar>
-#include <QtGui/QHeaderView>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
+#include <QApplication>
+#include <QPainter>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QKeyEvent>
+#include <QScrollBar>
+#include <QHeaderView>
+#include <QHBoxLayout>
+#include <QLabel>
 #include <QDebug>
 
 void TrackView::paintEvent(QPaintEvent *event)
