@@ -16,5 +16,4 @@ SOURCES += main.cpp \
            multitrackview.cpp \
            rownumberview.cpp \
            trackarea.cpp \
-           trackview.cpp \
-           GeneratedFiles/qrc_mainwindow.cpp
+           trackview.cpp
