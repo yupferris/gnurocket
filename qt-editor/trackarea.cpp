@@ -36,6 +36,18 @@ void TrackArea::setRow(int row)
 	updateVScrollbar();
 }
 
+int TrackArea::getRowCount() const
+{
+	return multiTrackView->getRowCount();
+}
+
+void TrackArea::setRowCount(int rows)
+{
+	// propagate row-count to both widgets
+	rowNumberView->setRowCount(rows);
+	multiTrackView->setRowCount(rows);
+}
+
 void TrackArea::updateHScrollbar()
 {
 	// make sure current track is visible

@@ -2,8 +2,10 @@
 
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QInputDialog>
 
 #include "trackarea.h"
+#include "multitrackview.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
@@ -17,4 +19,17 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 MainWindow::~MainWindow()
 {
 
+}
+
+void MainWindow::on_actionSet_rows_triggered()
+{
+	bool ok = false;
+	int newRowCount = QInputDialog::getInt(this,
+					       "Set rows", "",
+					       trackArea->getRowCount(),
+					       0, INT_MAX, 1, &ok);
+	if (ok)
+		trackArea->setRowCount(newRowCount);
+	else
+		QApplication::beep();
 }

@@ -13,7 +13,8 @@ public:
 	TrackArea(QWidget *parent = 0);
 
 	void setRow(int row);
-
+	int getRowCount() const;
+	void setRowCount(int rows);
 protected:
 	void scrollContentsBy(int dx, int dy);
 	void updateHScrollbar();

@@ -13,6 +13,9 @@ public:
 	MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~MainWindow();
 
+private slots:
+	void on_actionSet_rows_triggered();
+
 private:
 	Ui::MainWindowClass ui;
 

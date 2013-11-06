@@ -49,6 +49,5 @@ void TrackView::changeEvent(QEvent *event)
 	if (event->type() == QEvent::FontChange) {
 		Q_ASSERT(fontInfo().fixedPitch());
 		setFixedWidth(fontMetrics().width(' ') * 16);
-		setFixedHeight(fontMetrics().lineSpacing() * 32);
 	}
 }

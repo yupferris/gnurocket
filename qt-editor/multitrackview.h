@@ -17,12 +17,17 @@ public:
 	int getCol() { return currCol; }
 	void setCol(int col);
 
+	void setRowCount(int rows);
+	int getRowCount() const { return rowCount; };
+
 	QRect getCurrentTrackRect() const;
 
 protected:
+	void changeEvent(QEvent *event);
 
 	QList<TrackView *> trackViews;
 	int currRow, currCol;
+	int rowCount;
 };
 
 #endif // MULTITRACKVIEW_H

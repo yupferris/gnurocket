@@ -13,6 +13,7 @@ MultiTrackView::MultiTrackView(QWidget *parent) :
 	layout->setContentsMargins(QMargins());
 	layout->setSpacing(1);
 	setLayout(layout);
+	setRowCount(128);
 
 	// HACK: add some data!
 	for (int i = 0; i < 10; ++i) {
@@ -38,7 +39,7 @@ void MultiTrackView::setRow(int row)
 	if (!trackViews.size())
 		return;
 
-	row = qMax(row, 0);
+	row = qMin(qMax(row, 0), rowCount - 1);
 	if (currRow != row) {
 		Q_ASSERT(currCol >= 0 && currCol < trackViews.size());
 		trackViews[currCol]->setRowHilight(row);
@@ -54,9 +55,25 @@ void MultiTrackView::setCol(int col)
 
 	col = qMin(qMax(col, 0), trackViews.size() - 1);
 	if (currCol != col) {
-		trackViews[currCol]->setRowHilight(-1);
+		if (currCol >= 0)
+			trackViews[currCol]->setRowHilight(-1);
+
 		trackViews[col]->setRowHilight(currRow);
 		currCol = col;
 	} else
 		QApplication::beep();
+}
+
+void MultiTrackView::setRowCount(int rows)
+{
+	setFixedHeight(fontMetrics().lineSpacing() * rows);
+	rowCount = rows;
+}
+
+void MultiTrackView::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::FontChange) {
+		Q_ASSERT(fontInfo().fixedPitch());
+		setFixedHeight(fontMetrics().lineSpacing() * rowCount);
+	}
 }

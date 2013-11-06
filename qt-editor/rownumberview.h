@@ -26,6 +26,11 @@ public:
 		update(0, row * fontMetrics().lineSpacing(), width(), fontMetrics().lineSpacing());
 	}
 
+	void setRowCount(int rows)
+	{
+		setFixedHeight(fontMetrics().lineSpacing() * rows);
+	}
+
 protected:
 	void paintEvent(QPaintEvent *event);
 
