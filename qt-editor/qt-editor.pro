@@ -2,6 +2,7 @@ TEMPLATE = app
 TARGET = qt-editor
 DEPENDPATH += . GeneratedFiles
 INCLUDEPATH += .
+QT += widgets
 
 HEADERS += mainwindow.h \
            multitrackview.h \
