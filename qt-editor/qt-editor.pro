@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET =
+TARGET = qt-editor
 DEPENDPATH += . GeneratedFiles
 INCLUDEPATH += .
 
