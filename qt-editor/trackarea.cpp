@@ -9,7 +9,7 @@
 TrackArea::TrackArea(QWidget *parent) :
 	QScrollArea(parent)
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 	setFont(QFont("Fixedsys"));
 #else
 	QFont font("Monospace");
