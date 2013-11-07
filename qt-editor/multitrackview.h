@@ -19,6 +19,7 @@ public:
 
 	void setRowCount(int rows);
 	int getRowCount() const { return rowCount; };
+	int getColCount() const { return trackViews.size(); };
 
 	QRect getCurrentTrackRect() const;
 

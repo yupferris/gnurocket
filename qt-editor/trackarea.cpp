@@ -36,6 +36,12 @@ void TrackArea::setRow(int row)
 	updateVScrollbar();
 }
 
+void TrackArea::setCol(int col)
+{
+	multiTrackView->setCol(col);
+	updateHScrollbar();
+}
+
 int TrackArea::getRowCount() const
 {
 	return multiTrackView->getRowCount();
@@ -85,13 +91,25 @@ void TrackArea::keyPressEvent(QKeyEvent *event)
 		break;
 
 	case Qt::Key_Left:
-		multiTrackView->setCol(multiTrackView->getCol() - 1);
-		updateHScrollbar();
+		setCol(multiTrackView->getCol() - 1);
 		break;
 
 	case Qt::Key_Right:
-		multiTrackView->setCol(multiTrackView->getCol() + 1);
-		updateHScrollbar();
+		setCol(multiTrackView->getCol() + 1);
+		break;
+
+	case Qt::Key_Home:
+		if (event->modifiers() & Qt::ControlModifier)
+			setCol(0);
+		else
+			setRow(0);
+		break;
+
+	case Qt::Key_End:
+		if (event->modifiers() & Qt::ControlModifier)
+			setCol(multiTrackView->getColCount() - 1);
+		else
+			setRow(multiTrackView->getRowCount() - 1);
 		break;
 	}
 }

@@ -13,6 +13,7 @@ public:
 	TrackArea(QWidget *parent = 0);
 
 	void setRow(int row);
+	void setCol(int col);
 	int getRowCount() const;
 	void setRowCount(int rows);
 protected:
