@@ -41,16 +41,14 @@ QRect TrackGroupView::getCurrentTrackRect() const
 
 void TrackGroupView::setRow(int row)
 {
+	Q_ASSERT(row >= 0 && row < rowCount);
+
 	if (!trackViews.size())
 		return;
 
-	row = qMin(qMax(row, 0), rowCount - 1);
-	if (currRow != row) {
-		Q_ASSERT(currCol >= 0 && currCol < trackViews.size());
-		trackViews[currCol]->setRowHilight(row);
-		currRow = row;
-	} else
-		QApplication::beep();
+	Q_ASSERT(currCol >= 0 && currCol < trackViews.size());
+	trackViews[currCol]->setRowHilight(row);
+	currRow = row;
 }
 
 void TrackGroupView::setCol(int col)

@@ -5,6 +5,7 @@
 
 #include <QScrollBar>
 #include <QKeyEvent>
+#include <QApplication>
 
 TrackArea::TrackArea(QWidget *parent) :
 	QScrollArea(parent)
@@ -31,8 +32,13 @@ TrackArea::TrackArea(QWidget *parent) :
 
 void TrackArea::setRow(int row)
 {
-	trackGroupView->setRow(row);
-	rowNumberView->setRowHilight(row);
+	row = qMin(qMax(row, 0), getRowCount() - 1);
+	if (trackGroupView->getRow() != row) {
+		trackGroupView->setRow(row);
+		rowNumberView->setRowHilight(row);
+	} else
+		QApplication::beep();
+
 	updateVScrollbar();
 }
 
