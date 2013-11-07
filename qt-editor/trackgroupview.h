@@ -1,16 +1,16 @@
-#ifndef MULTITRACKVIEW_H
-#define MULTITRACKVIEW_H
+#ifndef TRACKGROUPVIEW_H
+#define TRACKGROUPVIEW_H
 
 #include <QWidget>
 
 class TrackView;
 class QHBoxLayout;
 
-class MultiTrackView : public QWidget {
+class TrackGroupView : public QWidget {
 	Q_OBJECT
 
 public:
-	MultiTrackView(QWidget *parent = 0);
+	TrackGroupView(QWidget *parent = 0);
 
 	int getRow() { return currRow; }
 	void setRow(int row);
@@ -31,4 +31,4 @@ protected:
 	int rowCount;
 };
 
-#endif // MULTITRACKVIEW_H
+#endif // TRACKGROUPVIEW_H

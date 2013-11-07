@@ -3,7 +3,7 @@
 
 #include <QScrollArea>
 
-class MultiTrackView;
+class TrackGroupView;
 class RowNumberView;
 
 class TrackArea : public QScrollArea {
@@ -22,7 +22,7 @@ protected:
 	void updateVScrollbar();
 	void keyPressEvent(QKeyEvent *event);
 	void resizeEvent(QResizeEvent *event);
-	MultiTrackView *multiTrackView;
+	TrackGroupView *trackGroupView;
 	RowNumberView *rowNumberView;
 };
 

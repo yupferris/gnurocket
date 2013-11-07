@@ -5,7 +5,6 @@
 #include <QInputDialog>
 
 #include "trackarea.h"
-#include "multitrackview.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)

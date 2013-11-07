@@ -1,5 +1,5 @@
 #include "trackarea.h"
-#include "multitrackview.h"
+#include "trackgroupview.h"
 #include "trackview.h"
 #include "rownumberview.h"
 
@@ -16,8 +16,8 @@ TrackArea::TrackArea(QWidget *parent) :
 	font.setStyleHint(QFont::TypeWriter);
 	setFont(font);
 #endif
-	multiTrackView = new MultiTrackView(this);
-	setWidget(multiTrackView);
+	trackGroupView = new TrackGroupView(this);
+	setWidget(trackGroupView);
 
 	setAlignment(Qt::AlignCenter);
 
@@ -31,33 +31,33 @@ TrackArea::TrackArea(QWidget *parent) :
 
 void TrackArea::setRow(int row)
 {
-	multiTrackView->setRow(row);
+	trackGroupView->setRow(row);
 	rowNumberView->setRowHilight(row);
 	updateVScrollbar();
 }
 
 void TrackArea::setCol(int col)
 {
-	multiTrackView->setCol(col);
+	trackGroupView->setCol(col);
 	updateHScrollbar();
 }
 
 int TrackArea::getRowCount() const
 {
-	return multiTrackView->getRowCount();
+	return trackGroupView->getRowCount();
 }
 
 void TrackArea::setRowCount(int rows)
 {
 	// propagate row-count to both widgets
 	rowNumberView->setRowCount(rows);
-	multiTrackView->setRowCount(rows);
+	trackGroupView->setRowCount(rows);
 }
 
 void TrackArea::updateHScrollbar()
 {
 	// make sure current track is visible
-	const QRect trackRect = multiTrackView->getCurrentTrackRect();
+	const QRect trackRect = trackGroupView->getCurrentTrackRect();
 	int x = trackRect.x() + trackRect.width() / 2;
 	int y = verticalScrollBar()->value() + viewport()->height() / 2;
 	ensureVisible(x, y, trackRect.width() / 2, 0);
@@ -67,7 +67,7 @@ void TrackArea::updateVScrollbar()
 {
 	// vertically center current row
 	QFontMetrics fm(font());
-	int y = multiTrackView->getRow() * fm.lineSpacing() + fm.lineSpacing() / 2;
+	int y = trackGroupView->getRow() * fm.lineSpacing() + fm.lineSpacing() / 2;
 	verticalScrollBar()->setValue(y - viewport()->height() / 2);
 }
 
@@ -75,27 +75,27 @@ void TrackArea::keyPressEvent(QKeyEvent *event)
 {
 	switch (event->key()) {
 	case Qt::Key_Up:
-		setRow(multiTrackView->getRow() - 1);
+		setRow(trackGroupView->getRow() - 1);
 		break;
 
 	case Qt::Key_Down:
-		setRow(multiTrackView->getRow() + 1);
+		setRow(trackGroupView->getRow() + 1);
 		break;
 
 	case Qt::Key_PageUp:
-		setRow(multiTrackView->getRow() - 16);
+		setRow(trackGroupView->getRow() - 16);
 		break;
 
 	case Qt::Key_PageDown:
-		setRow(multiTrackView->getRow() + 16);
+		setRow(trackGroupView->getRow() + 16);
 		break;
 
 	case Qt::Key_Left:
-		setCol(multiTrackView->getCol() - 1);
+		setCol(trackGroupView->getCol() - 1);
 		break;
 
 	case Qt::Key_Right:
-		setCol(multiTrackView->getCol() + 1);
+		setCol(trackGroupView->getCol() + 1);
 		break;
 
 	case Qt::Key_Home:
@@ -107,9 +107,9 @@ void TrackArea::keyPressEvent(QKeyEvent *event)
 
 	case Qt::Key_End:
 		if (event->modifiers() & Qt::ControlModifier)
-			setCol(multiTrackView->getColCount() - 1);
+			setCol(trackGroupView->getColCount() - 1);
 		else
-			setRow(multiTrackView->getRowCount() - 1);
+			setRow(trackGroupView->getRowCount() - 1);
 		break;
 	}
 }

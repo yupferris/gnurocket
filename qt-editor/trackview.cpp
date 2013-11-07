@@ -1,5 +1,5 @@
 #include "trackview.h"
-#include "multitrackview.h"
+#include "trackgroupview.h"
 
 #include <QApplication>
 #include <QPainter>

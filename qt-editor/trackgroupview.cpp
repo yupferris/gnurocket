@@ -1,10 +1,10 @@
-#include "multitrackview.h"
+#include "trackgroupview.h"
 #include "trackview.h"
 
 #include <QApplication>
 #include <QHBoxLayout>
 
-MultiTrackView::MultiTrackView(QWidget *parent) :
+TrackGroupView::TrackGroupView(QWidget *parent) :
 	QWidget(parent),
 	currRow(-1),
 	currCol(-1)
@@ -25,7 +25,7 @@ MultiTrackView::MultiTrackView(QWidget *parent) :
 	setRow(0);
 }
 
-QRect MultiTrackView::getCurrentTrackRect() const
+QRect TrackGroupView::getCurrentTrackRect() const
 {
 	if (currCol < 0)
 		return QRect(0, 0, 0, 0);
@@ -34,7 +34,7 @@ QRect MultiTrackView::getCurrentTrackRect() const
 	return trackViews[currCol]->geometry();
 }
 
-void MultiTrackView::setRow(int row)
+void TrackGroupView::setRow(int row)
 {
 	if (!trackViews.size())
 		return;
@@ -48,7 +48,7 @@ void MultiTrackView::setRow(int row)
 		QApplication::beep();
 }
 
-void MultiTrackView::setCol(int col)
+void TrackGroupView::setCol(int col)
 {
 	if (!trackViews.size())
 		return;
@@ -64,13 +64,13 @@ void MultiTrackView::setCol(int col)
 		QApplication::beep();
 }
 
-void MultiTrackView::setRowCount(int rows)
+void TrackGroupView::setRowCount(int rows)
 {
 	setFixedHeight(fontMetrics().lineSpacing() * rows);
 	rowCount = rows;
 }
 
-void MultiTrackView::changeEvent(QEvent *event)
+void TrackGroupView::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::FontChange) {
 		Q_ASSERT(fontInfo().fixedPitch());
