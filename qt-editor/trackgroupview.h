@@ -23,6 +23,8 @@ public:
 
 	QRect getCurrentTrackRect() const;
 
+	TrackView *createTrackView();
+
 protected:
 	void changeEvent(QEvent *event);
 

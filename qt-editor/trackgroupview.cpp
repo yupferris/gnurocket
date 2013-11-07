@@ -16,13 +16,18 @@ TrackGroupView::TrackGroupView(QWidget *parent) :
 	setRowCount(128);
 
 	// HACK: add some data!
-	for (int i = 0; i < 10; ++i) {
-		TrackView *trackView = new TrackView;
-		trackViews.append(trackView);
-		layout->addWidget(trackView);
-	}
+	for (int i = 0; i < 10; ++i)
+		createTrackView();
 	setCol(0);
 	setRow(0);
+}
+
+TrackView *TrackGroupView::createTrackView()
+{
+	TrackView *trackView = new TrackView;
+	trackViews.append(trackView);
+	layout()->addWidget(trackView);
+	return trackView;
 }
 
 QRect TrackGroupView::getCurrentTrackRect() const
