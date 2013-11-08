@@ -12,6 +12,8 @@
 #include <QLabel>
 #include <QDebug>
 
+#include "track.h"
+
 void TrackView::paintEvent(QPaintEvent *event)
 {
 	QPainter painter(this);
@@ -38,8 +40,8 @@ void TrackView::paintEvent(QPaintEvent *event)
 		}
 
 		QString temp = QString("---");
-		if (!(r % 4))
-			temp.setNum(float(r) / 8, 'f', 4);
+		if (track->isKeyFrame(r))
+			temp.setNum(track->getKeyFrame(r).value);
 		painter.drawText(rect, 0, temp, &clipRect);
 	}
 }

@@ -10,12 +10,14 @@
 
 class QHBoxLayout;
 class QLabel;
+class Track;
 
 class TrackView : public QWidget {
 	Q_OBJECT
 public:
-	TrackView(QWidget *parent = 0) :
+	TrackView(Track *track, QWidget *parent = 0) :
 		QWidget(parent),
+		track(track),
 		rowHilight(-1)
 	{
 		setAttribute(Qt::WA_OpaquePaintEvent, true);
@@ -40,6 +42,7 @@ protected:
 	void paintEvent(QPaintEvent *event);
 	void changeEvent(QEvent *event);
 
+	Track *track;
 	int rowHilight;
 };
 

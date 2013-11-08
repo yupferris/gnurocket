@@ -3,8 +3,11 @@
 #include <QMenuBar>
 #include <QStatusBar>
 #include <QInputDialog>
+#include <QString>
 
 #include "trackarea.h"
+#include "trackgroupview.h"
+#include "track.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
@@ -13,6 +16,21 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 	trackArea = new TrackArea(this);
 	setCentralWidget(trackArea);
+
+#if 1
+	// HACK: add some data!
+	for (int i = 0; i < 10; ++i) {
+		Track *track = new Track;
+		trackArea->getTrackGroupView()->createTrackView(track);
+		for (int i = 0; i < 20; ++i) {
+			Track::KeyFrame key;
+			key.value = qrand() / (RAND_MAX * 0.5f);
+			track->setKeyFrame(qrand() % 128, key);
+		}
+	}
+	trackArea->getTrackGroupView()->setCol(0);
+	trackArea->getTrackGroupView()->setRow(0);
+#endif
 }
 
 MainWindow::~MainWindow()

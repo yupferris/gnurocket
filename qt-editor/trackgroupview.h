@@ -5,6 +5,7 @@
 
 class TrackView;
 class QHBoxLayout;
+class Track;
 
 class TrackGroupView : public QWidget {
 	Q_OBJECT
@@ -23,7 +24,7 @@ public:
 
 	QRect getCurrentTrackRect() const;
 
-	TrackView *createTrackView();
+	TrackView *createTrackView(Track *track);
 
 protected:
 	void changeEvent(QEvent *event);

@@ -23,7 +23,7 @@ TrackArea::TrackArea(QWidget *parent) :
 	setAlignment(Qt::AlignCenter);
 
 	rowNumberView = new RowNumberView(this);
-	setViewportMargins(fontMetrics().width(' ') * 8, 0, 0, 0);
+	setViewportMargins(fontMetrics().width(' ') * 8, fontMetrics().height(), 0, 0);
 
 	setFrameShape(QFrame::NoFrame);
 	setBackgroundRole(QPalette::Dark);
@@ -125,7 +125,7 @@ void TrackArea::resizeEvent(QResizeEvent *event)
 	updateHScrollbar();
 	updateVScrollbar();
 	QScrollArea::resizeEvent(event);
-	rowNumberView->move(0, widget()->y());
+	rowNumberView->move(0, fontMetrics().height() + widget()->y());
 	rowNumberView->resize(viewport()->x(), widget()->height());
 }
 

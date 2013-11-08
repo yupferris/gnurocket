@@ -14,19 +14,15 @@ TrackGroupView::TrackGroupView(QWidget *parent) :
 	layout->setSpacing(1);
 	setLayout(layout);
 	setRowCount(128);
-
-	// HACK: add some data!
-	for (int i = 0; i < 10; ++i)
-		createTrackView();
-	setCol(0);
-	setRow(0);
 }
 
-TrackView *TrackGroupView::createTrackView()
+TrackView *TrackGroupView::createTrackView(Track *track)
 {
-	TrackView *trackView = new TrackView;
+	TrackView *trackView = new TrackView(track);
 	trackViews.append(trackView);
 	layout()->addWidget(trackView);
+	trackView->show();
+	adjustSize();
 	return trackView;
 }
 

@@ -16,6 +16,9 @@ public:
 	void setCol(int col);
 	int getRowCount() const;
 	void setRowCount(int rows);
+
+	TrackGroupView *getTrackGroupView() { return trackGroupView; }
+
 protected:
 	void scrollContentsBy(int dx, int dy);
 	void updateHScrollbar();
