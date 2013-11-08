@@ -7,11 +7,11 @@ QT += widgets
 HEADERS += \
     mainwindow.h \
     rownumberview.h \
+    track.h \
     trackarea.h \
-    trackview.h \
-    trackgroupview.h \
     trackgroup.h \
-    track.h
+    trackgroupview.h \
+    trackview.h
 
 FORMS += mainwindow.ui
 
@@ -19,8 +19,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     rownumberview.cpp \
+    track.cpp \
     trackarea.cpp \
-    trackview.cpp \
-    trackgroupview.cpp \
     trackgroup.cpp \
-    track.cpp
+    trackgroupview.cpp \
+    trackview.cpp

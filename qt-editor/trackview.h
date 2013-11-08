@@ -23,7 +23,8 @@ public:
 		setAttribute(Qt::WA_OpaquePaintEvent, true);
 	}
 
-	void setRowHilight(int row) {
+	void setRowHilight(int row)
+	{
 		int oldRow = rowHilight;
 		rowHilight = row;
 

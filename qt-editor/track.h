@@ -8,6 +8,13 @@ class Track {
 public:
 	struct KeyFrame {
 		float value;
+		enum Type {
+			Step,
+			Linear,
+			Smooth,
+			Ramp,
+			TypeMax
+		} type;
 	};
 
 	void setKeyFrame(int row, const KeyFrame &key) { keys.insert(row, key); }

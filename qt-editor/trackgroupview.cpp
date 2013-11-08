@@ -1,11 +1,13 @@
 #include "trackgroupview.h"
 #include "trackview.h"
+#include "trackgroup.h"
 
 #include <QApplication>
 #include <QHBoxLayout>
 
-TrackGroupView::TrackGroupView(QWidget *parent) :
+TrackGroupView::TrackGroupView(TrackGroup *trackGroup, QWidget *parent) :
 	QWidget(parent),
+	trackGroup(trackGroup),
 	currRow(-1),
 	currCol(-1)
 {
@@ -14,16 +16,27 @@ TrackGroupView::TrackGroupView(QWidget *parent) :
 	layout->setSpacing(1);
 	setLayout(layout);
 	setRowCount(128);
+
+	connect(trackGroup, SIGNAL(trackAdded(Track *)), this, SLOT(trackAdded(Track *)));
+	connect(trackGroup, SIGNAL(trackRemove(int)), this, SLOT(trackRemoved(int)));
 }
 
-TrackView *TrackGroupView::createTrackView(Track *track)
+void TrackGroupView::trackAdded(Track *track)
 {
 	TrackView *trackView = new TrackView(track);
 	trackViews.append(trackView);
 	layout()->addWidget(trackView);
 	trackView->show();
 	adjustSize();
-	return trackView;
+}
+
+void TrackGroupView::trackRemoved(int index)
+{
+	TrackView *trackView = trackViews[index];
+	layout()->removeWidget(trackView);
+	trackViews.removeAt(index);
+	delete trackView;
+	adjustSize();
 }
 
 QRect TrackGroupView::getCurrentTrackRect() const

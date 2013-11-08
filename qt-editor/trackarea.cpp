@@ -1,7 +1,9 @@
 #include "trackarea.h"
+#include "trackgroup.h"
 #include "trackgroupview.h"
 #include "trackview.h"
 #include "rownumberview.h"
+#include "track.h"
 
 #include <QScrollBar>
 #include <QKeyEvent>
@@ -17,8 +19,25 @@ TrackArea::TrackArea(QWidget *parent) :
 	font.setStyleHint(QFont::TypeWriter);
 	setFont(font);
 #endif
-	trackGroupView = new TrackGroupView(this);
+
+	// HACK: create a dummy-trackgroup
+	TrackGroup *trackGroup = new TrackGroup;
+	trackGroupView = new TrackGroupView(trackGroup, this);
 	setWidget(trackGroupView);
+
+	// HACK: add some data!
+	for (int i = 0; i < 10; ++i) {
+		Track *track = new Track;
+		trackGroup->addTrack(track);
+		for (int i = 0; i < 20; ++i) {
+			Track::KeyFrame key;
+			key.value = qrand() / (RAND_MAX * 0.5f);
+			key.type = Track::KeyFrame::Step;
+			track->setKeyFrame(qrand() % 128, key);
+		}
+	}
+	trackGroupView->setCol(0);
+	trackGroupView->setRow(0);
 
 	setAlignment(Qt::AlignCenter);
 
