@@ -27,6 +27,7 @@ public:
 		return keys.find(row).value();
 	}
 
+	const QString &getName() const { return name; }
 private:
 	QString name;
 	QMap<int, KeyFrame> keys;

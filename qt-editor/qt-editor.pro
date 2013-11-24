@@ -11,6 +11,7 @@ HEADERS += \
     trackarea.h \
     trackgroup.h \
     trackgroupview.h \
+    trackgroupnameview.h \
     trackview.h
 
 FORMS += mainwindow.ui
@@ -23,4 +24,5 @@ SOURCES += \
     trackarea.cpp \
     trackgroup.cpp \
     trackgroupview.cpp \
+    trackgroupnameview.cpp \
     trackview.cpp

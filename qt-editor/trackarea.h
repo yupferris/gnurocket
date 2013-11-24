@@ -4,6 +4,7 @@
 #include <QScrollArea>
 
 class TrackGroupView;
+class TrackGroupNameView;
 class RowNumberView;
 
 class TrackArea : public QScrollArea {
@@ -26,6 +27,7 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 	void resizeEvent(QResizeEvent *event);
 	TrackGroupView *trackGroupView;
+	TrackGroupNameView *trackNameView;
 	RowNumberView *rowNumberView;
 };
 
