@@ -11,6 +11,12 @@ Compile Editor
 GNU Rocket compiles using Microsoft Visual Studio 2008. Open editor.sln and
 select "Build" -> "Build Solution" from the menu to build the editor.
 
+Compile Qt-Editor
+-----------------
+The Qt-Editor uses QMake project files, and can either be converted to a
+Makefile or Visual Studio Project files by QMake, or be compiled through
+the QtCreator IDE.
+
 Compile Example
 ---------------
 GNU Rocket contains an example client called example_bass. This is a simple
