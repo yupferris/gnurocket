@@ -2,7 +2,7 @@
 #include "trackgroup.h"
 #include "track.h"
 
-#include <QPushButton>
+#include <QToolButton>
 #include <QHBoxLayout>
 #include <QPaintEvent>
 #include <QStylePainter>
@@ -21,7 +21,10 @@ TrackGroupNameView::TrackGroupNameView(TrackGroup *trackGroup, QWidget *parent) 
 
 void TrackGroupNameView::trackAdded(Track *track)
 {
-	QPushButton *trackNameView = new QPushButton(track->getName());
+	QToolButton *trackNameView = new QToolButton();
+	trackNameView->setText(track->getName());
+	trackNameView->setFixedWidth(fontMetrics().width(' ') * 16);
+
 	trackNameViews.append(trackNameView);
 	layout()->addWidget(trackNameView);
 	trackNameView->show();
@@ -30,7 +33,7 @@ void TrackGroupNameView::trackAdded(Track *track)
 
 void TrackGroupNameView::trackRemoved(int index)
 {
-	QPushButton *trackNameView = trackNameViews[index];
+	QToolButton *trackNameView = trackNameViews[index];
 	layout()->removeWidget(trackNameView);
 	trackNameViews.removeAt(index);
 	delete trackNameView;

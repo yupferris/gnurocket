@@ -27,10 +27,10 @@ TrackArea::TrackArea(QWidget *parent) :
 	setWidget(trackGroupView);
 
 	setAlignment(Qt::AlignCenter);
+	setViewportMargins(fontMetrics().width(' ') * 8, fontMetrics().height(), 0, 0);
 
 	rowNumberView = new RowNumberView(this);
 	trackGroupNameView = new TrackGroupNameView(trackGroup, this);
-	setViewportMargins(fontMetrics().width(' ') * 8, fontMetrics().height(), 0, 0);
 
 	setFrameShape(QFrame::NoFrame);
 	setBackgroundRole(QPalette::Dark);
@@ -39,7 +39,7 @@ TrackArea::TrackArea(QWidget *parent) :
 
 	// HACK: add some data!
 	for (int i = 0; i < 10; ++i) {
-		Track *track = new Track;
+		Track *track = new Track(QString("track %1").arg(i + 1));
 		trackGroup->addTrack(track);
 		for (int i = 0; i < 20; ++i) {
 			Track::KeyFrame key;
@@ -149,9 +149,7 @@ void TrackArea::resizeEvent(QResizeEvent *event)
 	QScrollArea::resizeEvent(event);
 	rowNumberView->move(0, fontMetrics().height() + widget()->y());
 	rowNumberView->resize(viewport()->x(), widget()->height());
-
-	trackGroupNameView->move(rowNumberView->width(), 0);
-	trackGroupNameView->resize(viewport()->width(), fontMetrics().height());
+	trackGroupNameView->move(viewport()->x() + widget()->x(), 0);
 }
 
 void TrackArea::scrollContentsBy(int dx, int dy)
@@ -159,6 +157,8 @@ void TrackArea::scrollContentsBy(int dx, int dy)
 	// syncronize left margin
 	if (dy)
 		rowNumberView->move(rowNumberView->x(), rowNumberView->y() + dy);
+	if (dx)
+		trackGroupNameView->move(trackGroupNameView->x() + dx, trackGroupNameView->y());
 
 	QScrollArea::scrollContentsBy(dx, dy);
 }

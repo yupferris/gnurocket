@@ -5,7 +5,7 @@
 
 class TrackGroup;
 class Track;
-class QPushButton;
+class QToolButton;
 
 class TrackGroupNameView : public QWidget {
 	Q_OBJECT
@@ -18,7 +18,7 @@ private slots:
 
 private:
 	TrackGroup *trackGroup;
-	QList<QPushButton *> trackNameViews;
+	QList<QToolButton *> trackNameViews;
 };
 
 #endif // TRACKNAMEVIEW_H

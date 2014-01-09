@@ -6,6 +6,8 @@
 
 class Track {
 public:
+	Track(const QString &name) : name(name) {}
+
 	struct KeyFrame {
 		float value;
 		enum Type {
