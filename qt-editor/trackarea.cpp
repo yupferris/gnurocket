@@ -4,6 +4,7 @@
 #include "trackview.h"
 #include "rownumberview.h"
 #include "track.h"
+#include "trackgroupnameview.h"
 
 #include <QScrollBar>
 #include <QKeyEvent>
@@ -28,6 +29,7 @@ TrackArea::TrackArea(QWidget *parent) :
 	setAlignment(Qt::AlignCenter);
 
 	rowNumberView = new RowNumberView(this);
+	trackGroupNameView = new TrackGroupNameView(trackGroup, this);
 	setViewportMargins(fontMetrics().width(' ') * 8, fontMetrics().height(), 0, 0);
 
 	setFrameShape(QFrame::NoFrame);
@@ -147,6 +149,9 @@ void TrackArea::resizeEvent(QResizeEvent *event)
 	QScrollArea::resizeEvent(event);
 	rowNumberView->move(0, fontMetrics().height() + widget()->y());
 	rowNumberView->resize(viewport()->x(), widget()->height());
+
+	trackGroupNameView->move(rowNumberView->width(), 0);
+	trackGroupNameView->resize(viewport()->width(), fontMetrics().height());
 }
 
 void TrackArea::scrollContentsBy(int dx, int dy)

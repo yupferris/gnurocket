@@ -4,6 +4,8 @@
 
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QPaintEvent>
+#include <QStylePainter>
 
 TrackGroupNameView::TrackGroupNameView(TrackGroup *trackGroup, QWidget *parent) :
 	QWidget(parent)

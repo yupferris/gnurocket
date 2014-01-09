@@ -27,7 +27,7 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 	void resizeEvent(QResizeEvent *event);
 	TrackGroupView *trackGroupView;
-	TrackGroupNameView *trackNameView;
+	TrackGroupNameView *trackGroupNameView;
 	RowNumberView *rowNumberView;
 };
 
