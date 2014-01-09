@@ -25,6 +25,16 @@ TrackArea::TrackArea(QWidget *parent) :
 	trackGroupView = new TrackGroupView(trackGroup, this);
 	setWidget(trackGroupView);
 
+	setAlignment(Qt::AlignCenter);
+
+	rowNumberView = new RowNumberView(this);
+	setViewportMargins(fontMetrics().width(' ') * 8, fontMetrics().height(), 0, 0);
+
+	setFrameShape(QFrame::NoFrame);
+	setBackgroundRole(QPalette::Dark);
+	setAutoFillBackground(true);
+
+
 	// HACK: add some data!
 	for (int i = 0; i < 10; ++i) {
 		Track *track = new Track;
@@ -38,15 +48,6 @@ TrackArea::TrackArea(QWidget *parent) :
 	}
 	trackGroupView->setCol(0);
 	trackGroupView->setRow(0);
-
-	setAlignment(Qt::AlignCenter);
-
-	rowNumberView = new RowNumberView(this);
-	setViewportMargins(fontMetrics().width(' ') * 8, fontMetrics().height(), 0, 0);
-
-	setFrameShape(QFrame::NoFrame);
-	setBackgroundRole(QPalette::Dark);
-	setAutoFillBackground(true);
 }
 
 void TrackArea::setRow(int row)
