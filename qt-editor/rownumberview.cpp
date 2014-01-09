@@ -3,6 +3,7 @@
 #include <QPaintEvent>
 #include <QStylePainter>
 #include <QStyleOptionButton>
+#include <qdrawutil.h>
 
 void RowNumberView::paintEvent(QPaintEvent *event)
 {
@@ -24,11 +25,7 @@ void RowNumberView::paintEvent(QPaintEvent *event)
 		else
 			painter.fillRect(rect, palette().button());
 
-		QStyleOptionButton option;
-		option.initFrom(this);
-		option.state |= QStyle::State_Raised;
-		option.rect = rect;
-		painter.drawPrimitive(QStyle::PE_FrameButtonBevel, option);
+		qDrawWinButton(&painter, rect, palette());
 
 		if (r % 8 == 0)
 			painter.setPen(QColor(0, 0, 0));
