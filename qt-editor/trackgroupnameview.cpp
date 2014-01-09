@@ -14,7 +14,7 @@ TrackGroupNameView::TrackGroupNameView(TrackGroup *trackGroup, QWidget *parent) 
 	setLayout(layout);
 
 	connect(trackGroup, SIGNAL(trackAdded(Track *)), this, SLOT(trackAdded(Track *)));
-	connect(trackGroup, SIGNAL(trackRemove(int)), this, SLOT(trackRemoved(int)));
+	connect(trackGroup, SIGNAL(trackRemoved(int)), this, SLOT(trackRemoved(int)));
 }
 
 void TrackGroupNameView::trackAdded(Track *track)

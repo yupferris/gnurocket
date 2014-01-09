@@ -18,7 +18,7 @@ TrackGroupView::TrackGroupView(TrackGroup *trackGroup, QWidget *parent) :
 	setRowCount(128);
 
 	connect(trackGroup, SIGNAL(trackAdded(Track *)), this, SLOT(trackAdded(Track *)));
-	connect(trackGroup, SIGNAL(trackRemove(int)), this, SLOT(trackRemoved(int)));
+	connect(trackGroup, SIGNAL(trackRemoved(int)), this, SLOT(trackRemoved(int)));
 }
 
 void TrackGroupView::trackAdded(Track *track)
