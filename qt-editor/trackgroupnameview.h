@@ -18,7 +18,7 @@ private slots:
 
 private:
 	TrackGroup *trackGroup;
-	QList<QToolButton *> trackNameViews;
+	QList<QWidget *> trackNameViews;
 };
 
 #endif // TRACKNAMEVIEW_H

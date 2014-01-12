@@ -33,7 +33,7 @@ void TrackGroupNameView::trackAdded(Track *track)
 
 void TrackGroupNameView::trackRemoved(int index)
 {
-	QToolButton *trackNameView = trackNameViews[index];
+	QWidget *trackNameView = trackNameViews[index];
 	layout()->removeWidget(trackNameView);
 	trackNameViews.removeAt(index);
 	delete trackNameView;
