@@ -30,3 +30,10 @@ SOURCES += clientsocket.cpp \
 RESOURCES += editor.qrc
 
 RC_FILE = editor.rc
+
+win32:package.files += ${TARGET} $${QMAKE_LIBDIR_QT}/../bin/QtCore$${QT_MAJOR_VERSION}.dll
+win32:package.files += ${TARGET} $${QMAKE_LIBDIR_QT}/../bin/QtGui$${QT_MAJOR_VERSION}.dll
+win32:package.files += ${TARGET} $${QMAKE_LIBDIR_QT}/../bin/QtNetwork$${QT_MAJOR_VERSION}.dll
+package.path = $${DESTDIR}/
+package.commands = echo $${TARGET}.$${TARGET_EXT} $${QMAKE_LIBDIR_QT}
+INSTALLS += package
