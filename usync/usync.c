@@ -134,7 +134,7 @@ void usync_export(void)
 		struct sync_track *t = usync_dev->data.tracks[i];
 		fprintf(fp, "\t/* track: %s */\n", t->name);
 		for (j = 0; j < t->num_keys; ++j)
-			fprintf(fp, "\t%d,\n", t->keys[j].value);
+			fprintf(fp, "\t%.6f,\n", t->keys[j].value);
 	}
 	fputs("};\n\n", fp);
 
