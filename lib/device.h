@@ -11,9 +11,8 @@ struct sync_device {
 #ifndef SYNC_PLAYER
 	int row;
 	SOCKET sock;
-#else
-	struct sync_io_cb io_cb;
 #endif
+	struct sync_io_cb io_cb;
 };
 
 #endif /* SYNC_DEVICE_H */
