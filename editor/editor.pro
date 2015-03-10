@@ -7,7 +7,10 @@ QT = core gui xml network
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets
+    qtHaveModule(websockets): QT += websockets
 }
+
+!contains(QT, websockets): message("QWebSockets not found, disabling websocket support...")
 
 # Input
 HEADERS += clientsocket.h \

@@ -8,6 +8,7 @@
 class QLabel;
 class QAction;
 class QTcpServer;
+class QWebSocketServer;
 
 class SyncDocument;
 class TrackView;
@@ -17,7 +18,11 @@ class MainWindow : public QMainWindow {
 	Q_OBJECT
 
 public:
-	MainWindow(QTcpServer *serverSocket);
+#ifdef QT_WEBSOCKETS_LIB
+	MainWindow(QTcpServer *tcpServerSocket, QWebSocketServer *wsServerSocket);
+#else
+	MainWindow(QTcpServer *tcpServerSocket);
+#endif
 	void showEvent(QShowEvent *event);
 
 	void createMenuBar();
@@ -34,7 +39,11 @@ public:
 	void setStatusValue(double val, bool valid);
 	void setStatusKeyType(SyncTrack::TrackKey::KeyType keyType, bool valid);
 
-	QTcpServer *serverSocket;
+	QTcpServer *tcpServerSocket;
+#ifdef QT_WEBSOCKETS_LIB
+	QWebSocketServer *wsServerSocket;
+#endif
+
 	ClientSocket clientSocket;
 	size_t clientIndex;
 
@@ -65,6 +74,9 @@ public slots:
 private slots:
 	void onReadyRead();
 	void onNewConnection();
+#ifdef QT_WEBSOCKETS_LIB
+	void onNewWsConnection();
+#endif
 	void onDisconnected();
 };
 

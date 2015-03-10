@@ -14,10 +14,22 @@
 #include <QTcpServer>
 #include <QtEndian>
 
-MainWindow::MainWindow(QTcpServer *serverSocket) :
-	QMainWindow(),
-	serverSocket(serverSocket),
-	clientIndex(0)
+#ifdef QT_WEBSOCKETS_LIB
+#include <QWebSocketServer>
+#include <QWebSocket>
+#endif
+
+#ifdef QT_WEBSOCKETS_LIB
+MainWindow::MainWindow(QTcpServer *tcpServerSocket, QWebSocketServer *wsServerSocket) :
+#else
+MainWindow::MainWindow(QTcpServer *tcpServerSocket) :
+#endif
+    QMainWindow(),
+    tcpServerSocket(tcpServerSocket),
+#ifdef QT_WEBSOCKETS_LIB
+    wsServerSocket(wsServerSocket),
+#endif
+    clientIndex(0)
 {
 	trackView = new TrackView(this);
 	setCentralWidget(trackView);
@@ -40,8 +52,13 @@ MainWindow::MainWindow(QTcpServer *serverSocket) :
 	createMenuBar();
 	createStatusBar();
 
-	connect(serverSocket, SIGNAL(newConnection()),
+	connect(tcpServerSocket, SIGNAL(newConnection()),
 	        this, SLOT(onNewConnection()));
+
+#ifdef QT_WEBSOCKETS_LIB
+	connect(wsServerSocket, SIGNAL(newConnection()),
+	        this, SLOT(onNewWsConnection()));
+#endif
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -547,7 +564,7 @@ void MainWindow::onNewConnection()
 	if (!clientSocket.connected()) {
 		setStatusText("Accepting...");
 		QHostAddress client;
-		TcpSocket *socket = clientConnect(serverSocket->nextPendingConnection(), &client);
+		TcpSocket *socket = clientConnect(tcpServerSocket->nextPendingConnection(), &client);
 		if (socket) {
 			setStatusText(QString("Connected to %1").arg(client.toString()));
 			clientSocket.socket = socket;
@@ -558,9 +575,31 @@ void MainWindow::onNewConnection()
 			clientSocket.sendSetRowCommand(trackView->getEditRow());
 			trackView->connected = true;
 		} else
-			setStatusText(QString("Not Connected: %1").arg(serverSocket->errorString()));
+			setStatusText(QString("Not Connected: %1").arg(tcpServerSocket->errorString()));
 	}
 }
+
+#ifdef QT_WEBSOCKETS_LIB
+void MainWindow::onNewWsConnection()
+{
+	if (!clientSocket.connected()) {
+		setStatusText("Accepting...");
+		QHostAddress client;
+		TcpSocket *socket = clientConnect(wsServerSocket->nextPendingConnection(), &client);
+		if (socket) {
+			setStatusText(QString("Connected to %1").arg(client.toString()));
+			clientSocket.socket = socket;
+			connect(socket->socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+			connect(socket->socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+			clientIndex = 0;
+			clientSocket.sendPauseCommand(trackView->paused);
+			clientSocket.sendSetRowCommand(trackView->getEditRow());
+			trackView->connected = true;
+		} else
+			setStatusText(QString("Not Connected: %1").arg(wsServerSocket->errorString()));
+	}
+}
+#endif
 
 void MainWindow::onDisconnected()
 {
