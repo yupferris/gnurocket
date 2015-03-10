@@ -93,7 +93,7 @@ bool WebSocket::sendFrame(int opcode, const char *payloadData, size_t payloadLen
 	return TcpSocket::send(payloadData, payloadLength, endOfMessage);
 }
 
-WebSocket *WebSocket::upgradeFromHttp(QTcpSocket *socket)
+WebSocket *WebSocket::upgradeFromHttp(QAbstractSocket *socket)
 {
 	QByteArray key;
 	for (;;) {

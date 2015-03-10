@@ -21,7 +21,7 @@ enum {
 
 class TcpSocket {
 public:
-	explicit TcpSocket(QTcpSocket *socket) : socket(socket) {}
+	explicit TcpSocket(QAbstractSocket *socket) : socket(socket) {}
 
 	bool connected() const
 	{
@@ -74,12 +74,12 @@ public:
 		return socket->bytesAvailable() > 0;
 	}
 
-	QTcpSocket *socket;
+	QAbstractSocket *socket;
 };
 
 class WebSocket : public TcpSocket {
 public:
-	explicit WebSocket(QTcpSocket *socket) : TcpSocket(socket), firstFrame(true) {}
+	explicit WebSocket(QAbstractSocket *socket) : TcpSocket(socket), firstFrame(true) {}
 
 	bool recv(char *buffer, int length);
 	bool send(const char *buffer, size_t length, bool endOfMessage)
@@ -104,7 +104,7 @@ public:
 	// helpers
 	bool readFrame(QByteArray &buf);
 	bool sendFrame(int opcode, const char *payloadData, size_t payloadLength, bool endOfMessage);
-	static WebSocket *upgradeFromHttp(QTcpSocket *socket);
+	static WebSocket *upgradeFromHttp(QAbstractSocket *socket);
 
 private:
 	bool firstFrame;

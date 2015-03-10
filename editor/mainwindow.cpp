@@ -487,9 +487,8 @@ void MainWindow::processCommand(ClientSocket &sock)
 	}
 }
 
-static TcpSocket *clientConnect(QTcpServer *serverSocket, QHostAddress *host)
+static TcpSocket *clientConnect(QAbstractSocket *clientSocket, QHostAddress *host)
 {
-	QTcpSocket *clientSocket = serverSocket->nextPendingConnection();
 	Q_ASSERT(clientSocket != NULL);
 
 	QByteArray line;
@@ -548,7 +547,7 @@ void MainWindow::onNewConnection()
 	if (!clientSocket.connected()) {
 		setStatusText("Accepting...");
 		QHostAddress client;
-		TcpSocket *socket = clientConnect(serverSocket, &client);
+		TcpSocket *socket = clientConnect(serverSocket->nextPendingConnection(), &client);
 		if (socket) {
 			setStatusText(QString("Connected to %1").arg(client.toString()));
 			clientSocket.socket = socket;
