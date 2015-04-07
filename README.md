@@ -86,3 +86,5 @@ Bugs and feedback
 ------------------
 Please report bugs or other feedback to the GNU Rocket mailing list:
 gnu-rocket@googlegroups.com
+
+[![Build Status](https://travis-ci.org/kusma/rocket.svg?branch=travis-test)](https://travis-ci.org/kusma/rocket)
