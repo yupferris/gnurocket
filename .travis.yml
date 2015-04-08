@@ -1,2 +1,16 @@
 language: c
 script: make
+
+env:
+  global:
+   - secure: "FdNY3GGU0/oyCGsQZfoumTgwU//FTARCHFgBlf3dBLWRlw4zO0FOuPsXP3Oaem9kY2c57Qn3a/edee+ZHivc/lXjP3Unr8791jR1C1VJV4uernpheIxSETpTfXPP3GQRhLPqCv8gr1n7EIAg2uvnpBrKlZeQVogTNfPkFN5kGG4="
+
+addons:
+  coverity_scan:
+    project:
+      name: "kusma/rocket"
+      description: "GNU Rocket"
+    notification_email: kusmabite@gmail.com
+    build_command_prepend: ""
+    build_command: "make"
+    branch_pattern: coverity_scan
