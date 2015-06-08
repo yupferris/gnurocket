@@ -7,9 +7,11 @@
 
 class QLabel;
 class QAction;
+class QTabWidget;
 class QTcpServer;
 
 class SyncDocument;
+class SyncPage;
 class TrackView;
 class ClientSocket;
 
@@ -19,6 +21,7 @@ class MainWindow : public QMainWindow {
 public:
 	MainWindow(QTcpServer *serverSocket);
 	void showEvent(QShowEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 
 	void createMenuBar();
 	void createStatusBar();
@@ -36,11 +39,20 @@ public:
 	void setStatusValue(double val, bool valid);
 	void setStatusKeyType(SyncTrack::TrackKey::KeyType keyType, bool valid);
 
+	TrackView *addTrackView(SyncPage *page);
+	void setTrackView(TrackView *trackView);
+
+
 	QTcpServer *serverSocket;
 	ClientSocket clientSocket;
 	size_t clientIndex;
 
-	TrackView *trackView;
+	SyncDocument *doc;
+
+	QTabWidget *tabWidget;
+	QList<TrackView *> trackViews;
+	TrackView *defaultTrackView, *currentTrackView;
+
 	QLabel *statusPos, *statusValue, *statusKeyType;
 	QMenu *fileMenu, *recentFilesMenu, *editMenu;
 	QAction *recentFileActions[5];
@@ -75,6 +87,8 @@ public slots:
 	void onCurrValDirty();
 
 private slots:
+	void onTabChanged(int index);
+
 	void onReadyRead();
 	void onNewConnection();
 	void onDisconnected();

@@ -6,6 +6,8 @@
 #include <QKeyEvent>
 #include <QPainter>
 
+#include "syncpage.h"
+
 class QLineEdit;
 class SyncDocument;
 
@@ -13,17 +15,10 @@ class TrackView : public QAbstractScrollArea
 {
 	Q_OBJECT
 public:
-	TrackView(QWidget *parent);
+	TrackView(SyncPage *page, QWidget *parent);
 	~TrackView();
 
-	void setDocument(SyncDocument *document)
-	{
-		this->document = document;
-		this->setupScrollBars();
-	}
-
-	const SyncDocument *getDocument() const { return document; }
-	SyncDocument *getDocument() { return document; }
+	SyncPage *page;
 
 	void setRows(size_t rows);
 	size_t getRows() const;
@@ -55,7 +50,7 @@ public:
 		emit posChanged(editTrack, editRow);
 	}
 
-	bool paused, connected;
+	bool readOnly;
 
 signals:
 	void posChanged(int col, int row);
@@ -68,8 +63,6 @@ private slots:
 	void onEditingFinished();
 
 public slots:
-	void editUndo();
-	void editRedo();
 	void editCopy();
 	void editCut();
 	void editPaste();
@@ -144,7 +137,7 @@ private:
 	int getTrackFromLogicalX(int x) const;
 	int getTrackFromPhysicalX(int x) const;
 
-	size_t getTrackCount() const;
+	int getTrackCount() const { return page->getTrackCount(); }
 
 	int selectStartTrack, selectStopTrack;
 	int selectStartRow, selectStopRow;
@@ -165,11 +158,9 @@ private:
 
 	/* cursor position */
 	int editRow, editTrack;
-	
+
 	int scrollPosX,  scrollPosY;
 	int windowRows;
-	
-	SyncDocument *document;
 
 	QLineEdit *lineEdit;
 

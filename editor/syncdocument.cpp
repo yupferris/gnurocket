@@ -100,7 +100,7 @@ bool SyncDocument::save(const QString &fileName)
 	QDomElement tracksNode =
 	    doc.createElement("tracks");
 	for (size_t i = 0; i < getTrackCount(); ++i) {
-		const SyncTrack *t = getTrack(trackOrder[i]);
+		const SyncTrack *t = defaultSyncPage.getTrack(i);
 
 		QDomElement trackElem =
 		    doc.createElement("track");
@@ -170,17 +170,10 @@ bool SyncDocument::save(const QString &fileName)
 	return true;
 }
 
-size_t SyncDocument::getTrackIndexFromPos(size_t track) const
-{
-	Q_ASSERT(track < (size_t)trackOrder.size());
-	return trackOrder[track];
-}
-
 void SyncDocument::swapTrackOrder(size_t t1, size_t t2)
 {
-	Q_ASSERT(t1 < (size_t)trackOrder.size());
-	Q_ASSERT(t2 < (size_t)trackOrder.size());
-	std::swap(trackOrder[t1], trackOrder[t2]);
+	// TODO: get rid of this
+	defaultSyncPage.swapTrackOrder(t1, t2);
 }
 
 bool SyncDocument::isRowBookmark(int row) const

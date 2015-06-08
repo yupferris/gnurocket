@@ -114,13 +114,25 @@ private:
 class ClientSocket : public QObject {
 	Q_OBJECT
 public:
-	ClientSocket() : socket(NULL) {}
+	ClientSocket() : socket(NULL), isPaused(true) {}
 
 	bool connected() const
 	{
 		if (!socket)
 			return false;
 		return socket->connected();
+	}
+
+	bool paused() const
+	{
+		return isPaused;
+	}
+
+	void setPaused(bool paused)
+	{
+		isPaused = paused;
+		if (connected())
+			sendPauseCommand(isPaused);
 	}
 
 	void disconnect()
@@ -154,11 +166,15 @@ public:
 	void sendSetKeyCommand(const QString &trackName, const SyncTrack::TrackKey &key);
 	void sendDeleteKeyCommand(const QString &trackName, int row);
 	void sendSetRowCommand(int row);
-	void sendPauseCommand(bool pause);
 	void sendSaveCommand();
 
 	QMap<QString, size_t> clientTracks;
 	TcpSocket *socket;
+
+private:
+
+	bool isPaused;
+	void sendPauseCommand(bool pause);
 
 public slots:
 	void onPauseChanged(bool paused)

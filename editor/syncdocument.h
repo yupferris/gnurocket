@@ -10,11 +10,13 @@
 
 #include "clientsocket.h"
 #include "synctrack.h"
+#include "syncpage.h"
 
 class SyncDocument : public QObject {
 	Q_OBJECT
 public:
 	SyncDocument() :
+	    defaultSyncPage(this, "default"),
 	    rows(128)
 	{
 		QObject::connect(&undoStack, SIGNAL(cleanChanged(bool)),
@@ -27,10 +29,16 @@ public:
 	{
 		SyncTrack *t = new SyncTrack(name);
 		tracks.append(t);
+		defaultSyncPage.addTrack(t);
 
-		int index = tracks.size() - 1;
-		trackOrder.push_back(index);
-		Q_ASSERT(trackOrder.size() == tracks.size());
+		QStringList parts = name.split('.');
+		if (parts.size() > 1) {
+			SyncPage *page = findSyncPage(parts[0]);
+			if (!page)
+				page = createSyncPage(parts[0]);
+			page->addTrack(t);
+		}
+
 		return t;
 	}
 
@@ -56,7 +64,7 @@ public:
 
 	size_t getTrackCount() const
 	{
-		Q_ASSERT(trackOrder.size() == tracks.size());
+		// TODO: clean up usages of this (tracks vs trackOrder)
 		return tracks.size();
 	}
 
@@ -71,7 +79,6 @@ public:
 	void deleteKeyFrame(SyncTrack *track, int row);
 	void endMacro() { undoStack.endMacro(); }
 
-	size_t getTrackIndexFromPos(size_t track) const;
 	void swapTrackOrder(size_t t1, size_t t2);
 
 	static SyncDocument *load(const QString &fileName);
@@ -88,16 +95,48 @@ public:
 	int nextRowBookmark(int row) const;
 	int prevRowBookmark(int row) const;
 
+	SyncPage *getDefaultSyncPage()
+	{
+		return &defaultSyncPage;
+	}
+
+	SyncPage *findSyncPage(const QString &name)
+	{
+		for (int i = 0; i < syncPages.size(); ++i)
+			if (name == syncPages[i]->getName())
+				return syncPages[i];
+		return NULL;
+	}
+
+	SyncPage *createSyncPage(const QString &name)
+	{
+		SyncPage *syncPage = new SyncPage(this, name);
+		syncPages.append(syncPage);
+		return syncPage;
+	}
+
+	int getSyncPageCount() const
+	{
+		return syncPages.size();
+	}
+
+	SyncPage *getSyncPage(int index)
+	{
+		return syncPages[index];
+	}
+
 private:
 	QList<SyncTrack*> tracks;
 	QList<int> rowBookmarks;
-	QVector<size_t> trackOrder;
+	QList<SyncPage*> syncPages;
+	SyncPage defaultSyncPage;
 	size_t rows;
 
 	QUndoStack undoStack;
 
 signals:
 	void modifiedChanged(bool modified);
+	void trackModified(int track);
 
 private slots:
 	void cleanChanged(bool clean) { emit modifiedChanged(!clean); }
