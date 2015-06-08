@@ -166,12 +166,19 @@ public slots:
 		sendPauseCommand(paused);
 	}
 
-	void onKeyFrameChanged(const SyncTrack &track, int row)
+	void onKeyFrameAdded(const SyncTrack &track, int row)
 	{
-		if (track.isKeyFrame(row))
-			sendSetKeyCommand(track.name, track.getKeyFrame(row));
-		else
-			sendDeleteKeyCommand(track.name, row);
+		sendSetKeyCommand(track.name, track.getKeyFrame(row));
+	}
+
+	void onKeyFrameChanged(const SyncTrack &track, int row, const SyncTrack::TrackKey &)
+	{
+		sendSetKeyCommand(track.name, track.getKeyFrame(row));
+	}
+
+	void onKeyFrameRemoved(const SyncTrack &track, int row)
+	{
+		sendDeleteKeyCommand(track.name, row);
 	}
 };
 
