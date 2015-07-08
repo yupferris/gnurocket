@@ -222,8 +222,8 @@ void TrackView::paintLeftMargin(QPainter &painter, const QRect &rcTracks)
 		painter.fillRect(leftMargin, fillBrush);
 
 		qDrawWinButton(&painter, leftMargin, palette());
-		if ((row % 8) == 0)      painter.setPen(QColor(0, 0, 0));
-		else if ((row % 4) == 0) painter.setPen(QColor(64, 64, 64));
+		if ((row % 12) == 0)      painter.setPen(QColor(0, 0, 0));
+		else if ((row % 6) == 0) painter.setPen(QColor(64, 64, 64));
 		else                     painter.setPen(QColor(128, 128, 128));
 
 		painter.drawText(leftMargin, QString("%1").arg(row, 5, 16, QChar('0')).toUpper() + "h");
@@ -323,11 +323,11 @@ void TrackView::paintTrack(QPainter &painter, const QRect &rcTracks, int track)
 			darkBrush = selectDarkBrush;
 		}
 
-		QBrush bgBrush = (row % 8 == 0) ? darkBrush : baseBrush;
+		QBrush bgBrush = (row % 12 == 0) ? darkBrush : baseBrush;
 
 		QRect fillRect = patternDataRect;
 		painter.fillRect(fillRect, bgBrush);
-		if (row % 8 == 0) {
+		if (row % 12 == 0) {
 			painter.setPen(selected ? rowSelectPen : rowPen);
 			painter.drawLine(patternDataRect.topLeft(),
 			                 patternDataRect.topRight());
